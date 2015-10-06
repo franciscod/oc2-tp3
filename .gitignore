@@ -1,0 +1,6 @@
+*.swp
+
+informe/*.pdf
+informe/*.out
+informe/*.aux
+informe/*.log
