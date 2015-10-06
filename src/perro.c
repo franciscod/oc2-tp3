@@ -84,7 +84,6 @@ uint game_perro_cavar(perro_t *perro)
 // *** viene del syscall olfatear ***
 uint game_perro_olfatear(perro_t *perro)
 {
-	int x_actual, y_actual;
 	int x_actual_diff = 1000, y_actual_diff = 1000;
 
 
@@ -98,8 +97,6 @@ uint game_perro_olfatear(perro_t *perro)
 
 		if (x_actual_diff * x_actual_diff + y_actual_diff * y_actual_diff > diff_x * diff_x + diff_y * diff_y)
 		{
-			x_actual = escondites[i][0];
-			y_actual = escondites[i][1];
 			x_actual_diff = diff_x;
 			y_actual_diff = diff_y;
 		}

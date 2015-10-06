@@ -65,7 +65,6 @@ typedef struct jugador_t
 	int x, y;  // posicion
     uint puntos;
 
-//<<<REMOVE END>>>
 } jugador_t;
 
 extern jugador_t jugadorA, jugadorB;

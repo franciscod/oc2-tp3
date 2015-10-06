@@ -23,16 +23,9 @@ int sched_buscar_indice_tarea(uint gdt_index) {
 
 int sched_buscar_tarea_libre()
 {
-//<<<REMOVE END>>>
-    // ee_printf("gdt_i0 %x",scheduler.tasks[0].gdt_index);
-    // ee_printf("gdt_i1 %x",scheduler.tasks[1].gdt_index);
-    // ee_printf("gdt_i2 %x",scheduler.tasks[2].gdt_index);
-	int i = sched_buscar_indice_tarea(GDT_IDX_NULL_DESC);
-    
-	ASSERT_OR_ERROR(i != MAX_CANT_TAREAS_VIVAS, "no hay tareas disponibles!?");
+	int i = 0;
 
     return i;
-//<<<REMOVE END>>>
 }
 
 
