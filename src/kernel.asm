@@ -42,12 +42,14 @@ start:
 
 
     ; Habilitar A20
+    call habilitar_A20
 
     ; Cargar la GDT
 
     ; Setear el bit PE del registro CR0
 
     ; Saltar a modo protegido
+    ; BITS 32 ?
 
     ; Establecer selectores de segmentos
 
