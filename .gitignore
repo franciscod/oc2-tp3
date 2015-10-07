@@ -4,3 +4,13 @@ informe/*.pdf
 informe/*.out
 informe/*.aux
 informe/*.log
+
+src/diskette.img
+src/*.o
+src/*.gch
+src/*.sym
+src/*.bin
+
+src/*.tsk
+src/*.ctsk
+src/*.tsko
