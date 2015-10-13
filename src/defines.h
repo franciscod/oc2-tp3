@@ -34,6 +34,7 @@ typedef unsigned int   uint;
 #define GDT_COUNT 30
 
 #define GDT_IDX_NULL_DESC           0
+#define GDT_IDX_NULL_DESC_LAST      7  // son 8 entradas nulas
 
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */
