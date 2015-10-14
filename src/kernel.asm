@@ -14,8 +14,14 @@ GDT_OFFSET_CODE_0 equ 64 ; 8x8
 GDT_OFFSET_CODE_3 equ 72 ; 8x9
 GDT_OFFSET_DATA_0 equ 80 ; 8x10
 GDT_OFFSET_DATA_3 equ 88 ; 8x11
+GDT_OFFSET_UI     equ 96 ; 8x12
 
 STACK_BASE equ 0x28000
+
+extern screen_inicializar, screen_pintar_puntajes
+extern game_jugador_inicializar, jugadorA, jugadorB
+
+
 
 global start
 
@@ -85,9 +91,19 @@ altosalto:
     ; Imprimir mensaje de bienvenida
     imprimir_texto_mp iniciando_mp_msg, iniciando_mp_len, 0x07, 2, 0
 
+    call pintar_extremo_ui
+
     ; Inicializar el juego
 
+    push jugadorA
+    call game_jugador_inicializar
+
+    push jugadorB
+    call game_jugador_inicializar
+
     ; Inicializar pantalla
+    call screen_inicializar
+    call screen_pintar_puntajes
 
     ; Inicializar el manejador de memoria
 
@@ -122,6 +138,30 @@ altosalto:
     mov edx, 0xFFFF
     jmp $
     jmp $
+
+
+
+pintar_extremo_ui:
+
+    ; Para probar el funcionamiento de la segmentación, agregar a la GDT un segmento adicional
+    ; que describa el área de la pantalla en memoria que pueda ser utilizado sólo por el kernel.
+    ; Escribir una rutina que pinte el extremo superior izquierdo de la pantalla utilizando este
+    ; segmento.
+
+    mov ax, GDT_OFFSET_UI
+
+    mov es, ax
+    mov byte [es:0x01], 0x1B ; fondo azul, letra cyan
+    mov byte [es:0x00], 'o'
+    mov byte [es:0x03], 0x1B ; fondo azul, letra cyan
+    mov byte [es:0x02], 'l'
+    mov byte [es:0x05], 0x1B ; fondo azul, letra cyan
+    mov byte [es:0x04], 'a'
+    mov byte [es:0x07], 0x1B ; fondo azul, letra cyan
+    mov byte [es:0x06], ' '
+
+    ret
+
 
 ;; -------------------------------------------------------------------------- ;;
 

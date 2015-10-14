@@ -99,6 +99,23 @@ gdt_entry gdt[GDT_COUNT] = {
         (unsigned char)     0x00,           /* base[31:24]  */
     },
 
+
+    [GDT_IDX_UI_KERNEL] = (gdt_entry) {
+        (unsigned short)    LIMIT_UI_15_00,         /* limit[0:15]  */
+        (unsigned short)    BASE_UI_15_00,         /* base[0:15]   */
+        (unsigned char)     BASE_UI_23_16,           /* base[23:16]  */
+        (unsigned char)     TYPE_DATA_RW,   /* type         */
+        (unsigned char)     S_CODE_OR_DATA, /* s            */
+        (unsigned char)     0x00,           /* dpl          */
+        (unsigned char)     PRESENT,        /* p            */
+        (unsigned char)     LIMIT_UI_19_16, /* limit[16:19] */
+        (unsigned char)     AVL,  /* avl          */
+        (unsigned char)     L_32,           /* l            */
+        (unsigned char)     DB_32,          /* db           */
+        (unsigned char)     GRANULARITY_4K, /* g            */
+        (unsigned char)     0x00,           /* base[31:24]  */
+    },
+
 };
 
 gdt_descriptor GDT_DESC = {

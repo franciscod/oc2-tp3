@@ -28,7 +28,17 @@ typedef unsigned int   uint;
 #define BOOTSECTOR              0x00001000 /* direccion fisica de comienzo del bootsector (copiado) */
 #define KERNEL                  0x00001200 /* direccion fisica de comienzo del kernel */
 
+#define BASE_UI                 0xb8000
+#define SIZE_UI                 0x1f40
+#define LIMIT_UI                (BASE_UI + SIZE_UI - 1)
 #define LIMIT_500M              (0x1f400 - 1) // 500 * 1024 * 1024 / (4 * 1024) por granularidad
+
+#define BASE_UI_15_00           (BASE_UI & 0x00FFFF)
+#define BASE_UI_23_16           ((BASE_UI & 0xFF0000) >> 16)
+
+#define LIMIT_UI_15_00          (LIMIT_UI & 0x0FFFF)
+#define LIMIT_UI_19_16          ((LIMIT_UI & 0xF0000) >> 16)
+
 #define LIMIT_500M_15_00        (LIMIT_500M & 0x0FFFF)
 #define LIMIT_500M_19_16        ((LIMIT_500M & 0xF0000) >> 16)
 
@@ -42,6 +52,7 @@ typedef unsigned int   uint;
 #define GDT_IDX_CODE_3              9
 #define GDT_IDX_DATA_0              10
 #define GDT_IDX_DATA_3              11
+#define GDT_IDX_UI_KERNEL           12
 
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */
