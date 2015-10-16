@@ -6,6 +6,7 @@
 %include "imprimir.mac"
 
 extern GDT_DESC
+extern IDT_DESC
 
 GDT_IDX_CODE_0 equ 8
 GDT_IDX_DATA_0 equ 10
@@ -20,6 +21,7 @@ STACK_BASE equ 0x28000
 
 extern screen_inicializar, screen_pintar_puntajes
 extern game_jugador_inicializar, jugadorA, jugadorB
+extern idt_inicializar
 
 
 
@@ -120,8 +122,13 @@ altosalto:
     ; Inicializar el scheduler
 
     ; Inicializar la IDT
+    call idt_inicializar
 
     ; Cargar IDT
+    LIDT [IDT_DESC]
+
+    ; disparar interrupcion accediendo mal a memoria
+    call escribir_afuera_de_video
 
     ; Configurar controlador de interrupciones
 
@@ -147,7 +154,8 @@ pintar_extremo_ui:
     ; que describa el área de la pantalla en memoria que pueda ser utilizado sólo por el kernel.
     ; Escribir una rutina que pinte el extremo superior izquierdo de la pantalla utilizando este
     ; segmento.
-
+    push ax
+    push es
     mov ax, GDT_OFFSET_UI
 
     mov es, ax
@@ -160,6 +168,23 @@ pintar_extremo_ui:
     mov byte [es:0x07], 0x1B ; fondo azul, letra cyan
     mov byte [es:0x06], ' '
 
+    pop es
+    pop ax
+
+    ret
+
+
+escribir_afuera_de_video:
+    push ax
+    push es
+
+    mov ax, GDT_OFFSET_UI
+
+    mov es, ax
+    mov byte [es:0xFFFFFFFF], 0x42 ; escribe bien afuera
+
+    pop es
+    pop ax
     ret
 
 

@@ -57,6 +57,7 @@ typedef unsigned int   uint;
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */
 #define GDT_OFF_NULL_DESC           (GDT_IDX_NULL_DESC      << 3)
+#define GDT_OFF_CODE_0              (GDT_IDX_CODE_0         << 3)
 
 /* Selectores de segmentos */
 /* -------------------------------------------------------------------------- */
