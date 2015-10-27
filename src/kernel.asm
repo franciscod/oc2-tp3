@@ -19,9 +19,13 @@ GDT_OFFSET_UI     equ 96 ; 8x12
 
 STACK_BASE equ 0x28000
 
+PAGE_DIRECTORY  equ 0x28000
+SET_PAGING      equ 0x80000000
+
 extern screen_inicializar, screen_pintar_puntajes
 extern game_jugador_inicializar, jugadorA, jugadorB
 extern idt_inicializar
+extern mmu_inicializar, mmu_inicializar_dir_kernel
 
 
 
@@ -108,12 +112,19 @@ altosalto:
     call screen_pintar_puntajes
 
     ; Inicializar el manejador de memoria
+    ; call mmu_inicializar
 
     ; Inicializar el directorio de paginas
+    ; call mmu_inicializar_dir_kernel
 
     ; Cargar directorio de paginas
+    ; mov eax, PAGE_DIRECTORY
+    ; mov cr3, eax
 
     ; Habilitar paginacion
+    ; mov eax, cr0
+    ; or eax, SET_PAGING
+    ; mov cr0, eax
 
     ; Inicializar tss
 
