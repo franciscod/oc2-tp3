@@ -25,7 +25,7 @@ SET_PAGING_MASK     equ 0x80000000
 extern screen_inicializar, screen_pintar_puntajes
 extern game_jugador_inicializar, jugadorA, jugadorB
 extern idt_inicializar
-extern mmu_inicializar, mmu_inicializar_dir_kernel
+extern mmu_inicializar, mmu_inicializar_dir_kernel, mmu_unmapear_pagina
 
 
 
@@ -43,6 +43,10 @@ iniciando_mr_len equ    $ - iniciando_mr_msg
 
 iniciando_mp_msg db     'Iniciando kernel (Modo Protegido)...'
 iniciando_mp_len equ    $ - iniciando_mp_msg
+
+
+nombre_grupo_msg db     'Fuga Villera Numero 2'
+nombre_grupo_len equ    $ - nombre_grupo_msg
 
 ;;
 ;; Seccion de código.
@@ -125,6 +129,15 @@ altosalto:
     mov eax, cr0
     or eax, SET_PAGING_MASK
     mov cr0, eax
+
+    imprimir_texto_mp nombre_grupo_msg, nombre_grupo_len, 0x07, 0, 0
+
+    mov eax, cr3
+
+    ; desmapea la ultima pagina del kernel (identity mapping) 5.3.f
+    ; push eax
+    ; push 0x3ff000
+    ; call mmu_unmapear_pagina
 
     ; Inicializar tss
 

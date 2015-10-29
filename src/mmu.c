@@ -20,7 +20,10 @@
 #define ATTRS_PAGINA	0x001
 #define ATTRS_MASK 		0xFFF
 
-#define CLEAR_ATTRS_MASK	0xFFFFF000
+#define CLEAR_ATTRS_MASK		0xFFFFF000
+#define CLEAR_PRESENT_BIT_MASK	0xFFFFFFFE
+
+#define PRESENT_BIT_MASK		0x00000001
 
 // figura 3
 #define AREA_LIBRE_START	0x100000
@@ -68,7 +71,7 @@ void mmu_mapear_pagina (uint virtual, uint cr3, uint fisica, uint attrs){
 
 	uint pde = pd_pointer[pde_index];
 
-	char directoryEntryPresent = (pde & 0x1);
+	char directoryEntryPresent = (pde & PRESENT_BIT_MASK);
 	char attributesUserBit = (attrs & 0x4);
 
 	uint *pt_pointer;
@@ -90,6 +93,25 @@ void mmu_mapear_pagina (uint virtual, uint cr3, uint fisica, uint attrs){
 
 	uint pte = fisica | (attrs & ATTRS_MASK);
 	pt_pointer[pte_index]= pte;
+}
+
+uint mmu_unmapear_pagina (uint virtual, uint cr3){
+	uint *pd_pointer = (uint*) cr3;
+	uint pde_index = virtual >> 22;
+	uint pde = pd_pointer[pde_index];
+
+	if (!(pde & PRESENT_BIT_MASK)) {
+		return 0;
+	}
+
+	uint *pt_pointer = (uint*) (pde & CLEAR_ATTRS_MASK);
+	uint pte_index = (virtual & 0x003FF000) >> 12;
+	uint pte = pt_pointer[pte_index];
+
+	pte &= CLEAR_PRESENT_BIT_MASK;
+	pt_pointer[pte_index] = pte;
+
+	return 1;
 }
 
 // FIXME para que devuelve uint?
