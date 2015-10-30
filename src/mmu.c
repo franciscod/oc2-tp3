@@ -7,6 +7,7 @@
 
 #include "mmu.h"
 #include "i386.h"
+#include "screen.h"
 
 /* Atributos paginas */
 /* -------------------------------------------------------------------------- */
@@ -54,7 +55,7 @@ uint mmu_proxima_pagina_fisica_libre() {
 }
 
 void mmu_inicializar_pagina(uint * pagina) {
-	for (uint i = 0 ; i < PAGE_SIZE / 4; i+=4) {
+	for (uint i = 0 ; i < PAGE_SIZE / 4; i++) {
 		pagina[i] = 0x00000000; // uint, escribe 4 bytes
 	}
 }
@@ -151,26 +152,26 @@ uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_
 	uint fisica_codigo_src = 0x10000 + index_jugador * 0x2000 + index_tipo * 0x1000;
 	uint fisica_codigo_dst = mmu_xy2fisica(perro->x, perro->y);
 	uint virtual_codigo_dst = mmu_xy2virtual(perro->x, perro->y);
+	mmu_mapear_pagina(virtual_codigo_dst, PAGE_DIRECTORY, fisica_codigo_dst, ATTRS_TABLA);
 
+	// TODO quiza debamos cambiar los atributos de estas paginas
 	// identity mapping
 	for (uint i = 0; i < 1024; i++) {
 		uint addr = i<<12;
 		mmu_mapear_pagina(addr, directorio, addr, ATTRS_TABLA);
 	}
 
-	mmu_mapear_pagina(virtual_codigo_dst, PAGE_DIRECTORY, fisica_codigo_dst, ATTRS_TABLA);
-
-	// TODO quiza debamos cambiar los atributos de estas paginas
 	mmu_mapear_pagina(ADDR_VIRTUAL_COMPARTIDA, directorio, pag_compartida[index_jugador], ATTRS_TABLA);
 	mmu_mapear_pagina(ADDR_VIRTUAL_CODIGO, directorio, fisica_codigo_dst, ATTRS_TABLA);
 	mmu_mapear_pagina(virtual_codigo_dst, directorio, fisica_codigo_dst, ATTRS_TABLA);
 
 	mmu_copiar_pagina(fisica_codigo_src, virtual_codigo_dst);
 
-	uint * fisica_codigo_dst_ptr = (uint *) fisica_codigo_dst;
+	uint * virtual_codigo_dst_ptr = (uint *) virtual_codigo_dst;
 
-	*(fisica_codigo_dst_ptr + 0x400 - 1) = perro->x;
-	*(fisica_codigo_dst_ptr + 0x400 - 2) = perro->y;
+	virtual_codigo_dst_ptr[0x400 - 1] = perro->x;
+
+	virtual_codigo_dst_ptr[0x400 - 2] = perro->y;
 
 	return directorio;
 }
@@ -179,17 +180,17 @@ void mmu_copiar_pagina (uint src, uint dst){
 	uint* psrc = (uint*) src;
 	uint* pdst = (uint*) dst;
 
-	for (uint i = 0 ; i < PAGE_SIZE / 4; i+=4) {
+	for (uint i = 0 ; i < PAGE_SIZE / 4 ; i++) {
 		pdst[i] = psrc[i];
 	}
 }
 
 uint mmu_xy2fisica(uint x, uint y) {
-	return MAPA_BASE_FISICA + game_xy2lineal(x, y);
+	return MAPA_BASE_FISICA + game_xy2lineal(x, y) * 0x1000;
 }
 
 uint mmu_xy2virtual(uint x, uint y) {
-	return MAPA_BASE_VIRTUAL + game_xy2lineal(x, y);
+	return MAPA_BASE_VIRTUAL + game_xy2lineal(x, y) * 0x1000;
 }
 
 // debe remapear y copiar el codigo

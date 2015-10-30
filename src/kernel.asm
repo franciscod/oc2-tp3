@@ -141,7 +141,6 @@ altosalto:
     ; push eax
     ; push 0x3ff000
     ; call mmu_unmapear_pagina
-    xchg bx, bx
 
     ; 5.4.c
     push 0
@@ -150,19 +149,15 @@ altosalto:
     push perrolandia
     call game_perro_inicializar
 
-    xchg bx, bx
-
     push 0
     push perrolandia
     call game_perro_reciclar_y_lanzar
-
-    xchg bx, bx
 
     push 0
     push 0
     push perrolandia
     call mmu_inicializar_memoria_perro
-
+    
     mov cr3, eax
 
     call pintar_extremo_ui ; con directotrio del perro
