@@ -26,7 +26,11 @@ extern screen_inicializar, screen_pintar_puntajes
 extern game_jugador_inicializar, jugadorA, jugadorB
 extern idt_inicializar
 extern mmu_inicializar, mmu_inicializar_dir_kernel, mmu_unmapear_pagina
+extern game_perro_inicializar
+extern game_perro_reciclar_y_lanzar
+extern mmu_inicializar_memoria_perro
 
+extern perrolandia
 
 
 global start
@@ -43,7 +47,6 @@ iniciando_mr_len equ    $ - iniciando_mr_msg
 
 iniciando_mp_msg db     'Iniciando kernel (Modo Protegido)...'
 iniciando_mp_len equ    $ - iniciando_mp_msg
-
 
 nombre_grupo_msg db     'Fuga Villera Numero 2'
 nombre_grupo_len equ    $ - nombre_grupo_msg
@@ -116,7 +119,7 @@ altosalto:
     call screen_pintar_puntajes
 
     ; Inicializar el manejador de memoria
-    ; call mmu_inicializar
+    call mmu_inicializar
 
     ; Inicializar el directorio de paginas
     call mmu_inicializar_dir_kernel
@@ -138,6 +141,33 @@ altosalto:
     ; push eax
     ; push 0x3ff000
     ; call mmu_unmapear_pagina
+    xchg bx, bx
+
+    ; 5.4.c
+    push 0
+    push 0
+    push jugadorA
+    push perrolandia
+    call game_perro_inicializar
+
+    xchg bx, bx
+
+    push 0
+    push perrolandia
+    call game_perro_reciclar_y_lanzar
+
+    xchg bx, bx
+
+    push 0
+    push 0
+    push perrolandia
+    call mmu_inicializar_memoria_perro
+
+    mov cr3, eax
+
+    call pintar_extremo_ui ; con directotrio del perro
+    ; 5.4.c
+
 
     ; Inicializar tss
 

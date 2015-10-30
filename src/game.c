@@ -21,6 +21,9 @@ jugador_t jugadorA;
 jugador_t jugadorB;
 
 perro_t *game_perro_actual = NULL;
+
+perro_t perrolandia[44];
+
 int ultimo_cambio = MAX_SIN_CAMBIOS;
 
 void ASSERT_OR_ERROR(uint value, char* error_msg)
@@ -90,8 +93,3 @@ perro_t* game_perro_en_posicion(uint x, uint y)
 void game_terminar_si_es_hora()
 {
 }
-
-
-
-
-
