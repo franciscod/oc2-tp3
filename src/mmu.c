@@ -154,6 +154,8 @@ uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_
 	uint virtual_codigo_dst = mmu_xy2virtual(perro->x, perro->y);
 	mmu_mapear_pagina(virtual_codigo_dst, PAGE_DIRECTORY, fisica_codigo_dst, ATTRS_TABLA);
 
+	mmu_copiar_pagina(fisica_codigo_src, virtual_codigo_dst);
+
 	// TODO quiza debamos cambiar los atributos de estas paginas
 	// identity mapping
 	for (uint i = 0; i < 1024; i++) {
@@ -164,8 +166,6 @@ uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_
 	mmu_mapear_pagina(ADDR_VIRTUAL_COMPARTIDA, directorio, pag_compartida[index_jugador], ATTRS_TABLA);
 	mmu_mapear_pagina(ADDR_VIRTUAL_CODIGO, directorio, fisica_codigo_dst, ATTRS_TABLA);
 	mmu_mapear_pagina(virtual_codigo_dst, directorio, fisica_codigo_dst, ATTRS_TABLA);
-
-	mmu_copiar_pagina(fisica_codigo_src, virtual_codigo_dst);
 
 	uint * virtual_codigo_dst_ptr = (uint *) virtual_codigo_dst;
 
