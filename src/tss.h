@@ -52,9 +52,11 @@ typedef struct str_tss {
     unsigned short  ldt;
     unsigned short  unused10;
     unsigned short  dtrap;
-    unsigned short  iomap;
+    unsigned short  iomap; // 0xFFFF cuando no se usa
 } __attribute__((__packed__, aligned (8))) tss;
 
 void tss_inicializar();
+void completar_tss(tss* entrada_tss, uint cs, uint ds, uint esp, uint eip, uint eeflags, uint cr3); // algo mas?
+void cargar_tss_en_gdt(tss* entrada_tss, gdt_entry* entrada_gdt); // algo mas?
 
 #endif  /* !__TSS_H__ */
