@@ -44,7 +44,7 @@ typedef unsigned int   uint;
 
 /* Indices en la gdt */
 /* -------------------------------------------------------------------------- */
-#define GDT_COUNT 30
+#define GDT_COUNT 32
 
 #define GDT_IDX_NULL_DESC           0
 #define GDT_IDX_NULL_DESC_LAST      7  // son 8 entradas nulas, 1 de intel + 7 utilizadas segun el tp
@@ -53,6 +53,10 @@ typedef unsigned int   uint;
 #define GDT_IDX_DATA_0              10
 #define GDT_IDX_DATA_3              11
 #define GDT_IDX_UI_KERNEL           12
+#define GDT_IDX_TSS_INICIAL         13
+#define GDT_IDX_TSS_IDLE            14
+#define GDT_IDX_TSS_PERRO_START     15
+#define GDT_IDX_TSS_PERRO_END       GDT_IDX_TSS_PERRO_START + MAX_CANT_PERROS_VIVOS * 2 - 1
 
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */

@@ -116,6 +116,19 @@ gdt_entry gdt[GDT_COUNT] = {
         (unsigned char)     0x00,           /* base[31:24]  */
     },
 
+    [GDT_IDX_TSS_INICIAL] = (gdt_entry) {
+      // queda libre, se pisa con la tarea inicial
+    },
+
+    [GDT_IDX_TSS_IDLE] = (gdt_entry) {
+      // a completar una vez
+    },
+
+    [GDT_IDX_TSS_PERRO_START ... GDT_IDX_TSS_PERRO_END] = (gdt_entry) {
+      // a completar dinamicamente
+    }
+
+
 };
 
 gdt_descriptor GDT_DESC = {
