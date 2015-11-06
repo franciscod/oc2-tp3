@@ -29,7 +29,7 @@ extern mmu_inicializar, mmu_inicializar_dir_kernel, mmu_unmapear_pagina
 extern game_perro_inicializar
 extern game_perro_reciclar_y_lanzar
 extern mmu_inicializar_memoria_perro
-
+extern habilitar_pic, resetear_pic
 extern perrolandia
 
 
@@ -177,13 +177,16 @@ altosalto:
     LIDT [IDT_DESC]
 
     ; disparar interrupcion accediendo mal a memoria
-    call escribir_afuera_de_video
+    ;call escribir_afuera_de_video
 
     ; Configurar controlador de interrupciones
+    call resetear_pic
+    call habilitar_pic
 
     ; Cargar tarea inicial
 
     ; Habilitar interrupciones
+    sti
 
     ; Saltar a la primera tarea: Idle
 
