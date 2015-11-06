@@ -19,9 +19,6 @@ tss tss_jugadorA[MAX_CANT_PERROS_VIVOS];
 tss tss_jugadorB[MAX_CANT_PERROS_VIVOS];
 
 void tss_inicializar() {
-  // la inicial la dejamos como esta
-
-  // inicializar la idle
   completar_tss(&tss_idle,
     GDT_IDX_CODE_0,
     GDT_IDX_DATA_0,
@@ -34,7 +31,8 @@ void tss_inicializar() {
     mmu_proxima_pagina_fisica_libre() + 0x1000
   );
 
-  // volcarlos a la gdt?
+  cargar_tss_en_gdt(&tss_inicial, &gdt[GDT_IDX_TSS_INICIAL]);
+  cargar_tss_en_gdt(&tss_idle, &gdt[GDT_IDX_TSS_IDLE]);
 }
 
 
@@ -90,7 +88,7 @@ void completar_tss_tarea(tss* entrada_tss, perro_t *perro, int index_jugador, in
   completar_tss(&tss_idle,
     GDT_IDX_CODE_3,
     GDT_IDX_DATA_3,
-    INICIO_PILA_TAREAS - 3*4,
+    INICIO_PILA_TAREAS - 3 * sizeof(uint),
     INICIO_CODIGO_TAREAS,
     EEFLAGS_INTERRUPCIONES,
     directorio_tarea,
@@ -102,5 +100,22 @@ void completar_tss_tarea(tss* entrada_tss, perro_t *perro, int index_jugador, in
 
 void cargar_tss_en_gdt(tss* entrada_tss,
                        gdt_entry* entrada_gdt) {
+
+    uint base = (uint) entrada_tss;
+
+    entrada_gdt->limit_0_15  = 0x67; // 104 bytes - 1
+    entrada_gdt->limit_16_19 = 0x0;
+    entrada_gdt->base_0_15   = base & 0xFFFF;
+    entrada_gdt->base_23_16  = (base >> 16) & 0xFF;
+    entrada_gdt->base_31_24  = (base >> 24) & 0xFF;
+
+    entrada_gdt->type        = 0b1001;
+    entrada_gdt->s           = 0b0;
+    entrada_gdt->dpl         = 0b00;
+    entrada_gdt->p           = 0b1;
+    entrada_gdt->avl         = 1;
+    entrada_gdt->l           = 0;
+    entrada_gdt->db          = 0;
+    entrada_gdt->g           = 0; // granularidad de 1byte
 
 }
