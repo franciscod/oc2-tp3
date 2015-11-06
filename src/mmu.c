@@ -124,6 +124,7 @@ void mmu_inicializar() {
 // crea el directorio, las paginas, copia el codigo e inicializa el stack
 // el perro viene completo, tiene x y
 uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_tipo) {
+
 	uint directorio =  mmu_proxima_pagina_fisica_libre();
 	mmu_inicializar_pagina((uint*) directorio);
 	//asumiendo index_jugador y index_tipo [0, 1]
@@ -147,9 +148,10 @@ uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_
 
 	uint * virtual_codigo_dst_ptr = (uint *) virtual_codigo_dst;
 
-	virtual_codigo_dst_ptr[0x400 - 1] = perro->x;
-
-	virtual_codigo_dst_ptr[0x400 - 2] = perro->y;
+	// esto esta al reves?
+	virtual_codigo_dst_ptr[0x400 - 1] = perro->y;
+	virtual_codigo_dst_ptr[0x400 - 2] = perro->x;
+	virtual_codigo_dst_ptr[0x400 - 3] = TAREA_IDLE;
 
 	return directorio;
 }
