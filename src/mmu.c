@@ -9,28 +9,6 @@
 #include "i386.h"
 #include "screen.h"
 
-/* Atributos paginas */
-/* -------------------------------------------------------------------------- */
-
-//						IGN  PS IGN A PCD PWT U/S R/W P
-//						0000 0  0   0 0   0   0   0   1
-#define ATTRS_TABLA 	0x001
-
-//						IGN G PAT D A PCD PWT U/S R/W P
-//						000 0 0   0 0 0   0   0   0   1
-#define ATTRS_PAGINA	0x001
-#define ATTRS_MASK 		0xFFF
-
-#define CLEAR_ATTRS_MASK		0xFFFFF000
-#define CLEAR_PRESENT_BIT_MASK	0xFFFFFFFE
-
-#define PRESENT_BIT_MASK		0x00000001
-
-// figura 3
-#define AREA_LIBRE_START	0x100000
-#define AREA_LIBRE_END		0x3FFFFF
-
-#define PAGE_DIRECTORY		0x027000
 
 #define ADDR_VIRTUAL_COMPARTIDA		0x400000
 #define ADDR_VIRTUAL_CODIGO			0x401000
