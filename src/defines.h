@@ -27,6 +27,9 @@ typedef unsigned int   uint;
 
 #define BOOTSECTOR              0x00001000 /* direccion fisica de comienzo del bootsector (copiado) */
 #define KERNEL                  0x00001200 /* direccion fisica de comienzo del kernel */
+#define TAREA_IDLE              0x00016000
+#define STACK_BASE              0x00027000 /* direccion fisica de la base de la pila del kernel */
+
 
 #define BASE_UI                 0xb8000
 #define SIZE_UI                 0x1f40
@@ -42,6 +45,8 @@ typedef unsigned int   uint;
 #define LIMIT_500M_15_00        (LIMIT_500M & 0x0FFFF)
 #define LIMIT_500M_19_16        ((LIMIT_500M & 0xF0000) >> 16)
 
+#define MAX_CANT_PERROS_VIVOS 8
+
 /* Indices en la gdt */
 /* -------------------------------------------------------------------------- */
 #define GDT_COUNT 32
@@ -56,7 +61,7 @@ typedef unsigned int   uint;
 #define GDT_IDX_TSS_INICIAL         13
 #define GDT_IDX_TSS_IDLE            14
 #define GDT_IDX_TSS_PERRO_START     15
-#define GDT_IDX_TSS_PERRO_END       GDT_IDX_TSS_PERRO_START + MAX_CANT_PERROS_VIVOS * 2 - 1
+#define GDT_IDX_TSS_PERRO_END       (GDT_IDX_TSS_PERRO_START + MAX_CANT_PERROS_VIVOS * 2 - 1)
 
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */
