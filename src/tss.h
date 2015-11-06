@@ -56,7 +56,7 @@ typedef struct str_tss {
 } __attribute__((__packed__, aligned (8))) tss;
 
 void tss_inicializar();
-void completar_tss(tss* entrada_tss, uint cs, uint ds, uint esp, uint eip, uint eeflags, uint cr3); // algo mas?
+void completar_tss(tss* entrada_tss, unsigned short cs, unsigned short ds, uint esp, uint eip, uint eeflags, uint cr3, unsigned short ss0, uint esp0); // algo mas?
 void cargar_tss_en_gdt(tss* entrada_tss, gdt_entry* entrada_gdt); // algo mas?
 
 #endif  /* !__TSS_H__ */

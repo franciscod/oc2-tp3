@@ -10,6 +10,8 @@
 #include "defines.h"
 
 #define EEFLAGS_INTERRUPCIONES  0x00000202
+#define INICIO_CODIGO_TAREAS    0x00401000
+#define INICIO_PILA_TAREAS      0x00402000
 // inicioTSSs
 tss tss_inicial;
 tss tss_idle;
@@ -26,7 +28,10 @@ void tss_inicializar() {
     STACK_BASE,
     TAREA_IDLE,
     EEFLAGS_INTERRUPCIONES,
-    PAGE_DIRECTORY
+    PAGE_DIRECTORY,
+    GDT_IDX_DATA_0,
+    // la pila arranca desde el fin de la pagina y va subiendo al principio
+    mmu_proxima_pagina_fisica_libre() + 0x1000
   );
 
   // volcarlos a la gdt?
@@ -34,18 +39,24 @@ void tss_inicializar() {
 
 
 void completar_tss(tss* entrada_tss,
-                   uint cs,
-                   uint ds,
+                   unsigned short cs,
+                   unsigned short ds,
                    uint esp,
                    uint eip,
                    uint eeflags,
-                   uint cr3) {
+                   uint cr3,
+                   unsigned short ss0,
+                   uint esp0
+                 ) {
+
   entrada_tss->cr3 = cr3;
 
   entrada_tss->eip = eip;
 
   entrada_tss->esp = esp;
   entrada_tss->ebp = esp;
+
+  entrada_tss->esp0 = esp0;
 
   entrada_tss->cs = cs;
 
@@ -54,6 +65,8 @@ void completar_tss(tss* entrada_tss,
   entrada_tss->fs = ds;
   entrada_tss->gs = ds;
   entrada_tss->ss = ds;
+
+  entrada_tss->ss0 = ss0;
 
   entrada_tss->eax = 0x00000000;
   entrada_tss->ecx = 0x00000000;
@@ -68,6 +81,23 @@ void completar_tss(tss* entrada_tss,
   entrada_tss->eflags = eeflags;
   entrada_tss->iomap = 0xFFFF;
 
+}
+
+void completar_tss_tarea(tss* entrada_tss, perro_t *perro, int index_jugador, int index_tipo) {
+
+  uint directorio_tarea = mmu_inicializar_memoria_perro(perro, index_jugador, index_tipo);
+
+  completar_tss(&tss_idle,
+    GDT_IDX_CODE_3,
+    GDT_IDX_DATA_3,
+    INICIO_PILA_TAREAS - 3*4,
+    INICIO_CODIGO_TAREAS,
+    EEFLAGS_INTERRUPCIONES,
+    directorio_tarea,
+    GDT_IDX_CODE_0,
+    // la pila arranca desde el fin de la pagina y va subiendo al principio
+    mmu_proxima_pagina_fisica_libre() + 0x1000
+  );
 }
 
 void cargar_tss_en_gdt(tss* entrada_tss,
