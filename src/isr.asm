@@ -19,8 +19,8 @@ extern sched_atender_tick
 extern sched_tarea_actual
 
 
-general_protection_msg db     'GENERAL PROTECTION WACHIN O OTRA COSA NO SE, ME CUELGO'
-general_protection_len equ    $ - general_protection_msg
+interrupcion_desconocida_cuelgue_msg db     'INTERRUPCION DESCONOCIDA, KCSHO, ME CUELGO'
+interrupcion_desconocida_cuelgue_len equ    $ - interrupcion_desconocida_cuelgue_msg
 
 ;;
 ;; Definición de MACROS
@@ -31,7 +31,7 @@ global _isr%1
 
 _isr%1:
     mov eax, %1
-    imprimir_texto_mp general_protection_msg, general_protection_len, 0x07, 8, 8
+    imprimir_texto_mp interrupcion_desconocida_cuelgue_msg, interrupcion_desconocida_cuelgue_len, 0x07, 8, 8
     jmp $
 
 %endmacro
