@@ -8,14 +8,16 @@
 extern GDT_DESC
 extern IDT_DESC
 
-GDT_IDX_CODE_0 equ 8
-GDT_IDX_DATA_0 equ 10
+GDT_IDX_CODE_0       equ 8
+GDT_IDX_DATA_0       equ 10
 
-GDT_OFFSET_CODE_0 equ 64 ; 8x8
-GDT_OFFSET_CODE_3 equ 72 ; 8x9
-GDT_OFFSET_DATA_0 equ 80 ; 8x10
-GDT_OFFSET_DATA_3 equ 88 ; 8x11
-GDT_OFFSET_UI     equ 96 ; 8x12
+GDT_OFFSET_CODE_0          equ 64  ; 8x8
+GDT_OFFSET_CODE_3          equ 72  ; 8x9
+GDT_OFFSET_DATA_0          equ 80  ; 8x10
+GDT_OFFSET_DATA_3          equ 88  ; 8x11
+GDT_OFFSET_UI              equ 96  ; 8x12
+GDT_OFFSET_TSS_INICIAL     equ 104 ; 8x13 -- tss 104 -- illuminati confirmed
+GDT_OFFSET_TSS_IDLE        equ 112 ; 8x14
 
 STACK_BASE equ 0x27000 ; 5.1.b enunciado
 
@@ -31,7 +33,7 @@ extern game_perro_reciclar_y_lanzar
 extern mmu_inicializar_memoria_perro
 extern habilitar_pic, resetear_pic
 extern perrolandia
-
+extern tss_inicializar
 
 global start
 
@@ -110,9 +112,11 @@ altosalto:
 
     push jugadorA
     call game_jugador_inicializar
+    add esp, 4
 
     push jugadorB
     call game_jugador_inicializar
+    add esp, 4
 
     ; Inicializar pantalla
     call screen_inicializar
@@ -143,30 +147,31 @@ altosalto:
     ; call mmu_unmapear_pagina
 
     ; 5.4.c
-    push 0
-    push 0
-    push jugadorA
-    push perrolandia
-    call game_perro_inicializar
+    ;push 0
+    ;push 0
+    ;push jugadorA
+    ;push perrolandia
+    ;call game_perro_inicializar
 
-    push 0
-    push perrolandia
-    call game_perro_reciclar_y_lanzar
+    ;push 0
+    ;push perrolandia
+    ;call game_perro_reciclar_y_lanzar
 
-    push 0
-    push 0
-    push perrolandia
-    call mmu_inicializar_memoria_perro
-    
-    mov cr3, eax
+    ;push 0
+    ;push 0
+    ;push perrolandia
+    ;call mmu_inicializar_memoria_perro
 
-    call pintar_extremo_ui ; con directotrio del perro
-    ; 5.4.c
+    ;mov cr3, eax
+
+    ;call pintar_extremo_ui ; con directotrio del perro*/
+    ; fin 5.4.c
 
 
     ; Inicializar tss
+    ; + Inicializar tss de la tarea Idle
+    call tss_inicializar
 
-    ; Inicializar tss de la tarea Idle
 
     ; Inicializar el scheduler
 
@@ -184,11 +189,14 @@ altosalto:
     call habilitar_pic
 
     ; Cargar tarea inicial
+    mov ax, GDT_OFFSET_TSS_INICIAL
+    ltr ax
 
     ; Habilitar interrupciones
     sti
 
     ; Saltar a la primera tarea: Idle
+    jmp GDT_OFFSET_TSS_IDLE:0
 
     ; Ciclar infinitamente (por si algo sale mal...)
     mov eax, 0xFFFF

@@ -19,16 +19,22 @@ tss tss_jugadorA[MAX_CANT_PERROS_VIVOS];
 tss tss_jugadorB[MAX_CANT_PERROS_VIVOS];
 
 void tss_inicializar() {
+  // cargamos fruta en la tarea inicial para poder verlo con bochs
+  tss_inicial.eax = 0x12344321;
+  tss_inicial.ebx = 0x0CACAFEA;
+  tss_inicial.ecx = 0x42424242;
+  tss_inicial.edx = 0xCAFEC170;
+
   completar_tss(&tss_idle,
-    GDT_IDX_CODE_0,
-    GDT_IDX_DATA_0,
+    (GDT_IDX_CODE_0 << 3) | 0x000,
+    (GDT_IDX_DATA_0 << 3) | 0x000,
     STACK_BASE,
     TAREA_IDLE,
     EEFLAGS_INTERRUPCIONES,
     PAGE_DIRECTORY,
-    GDT_IDX_DATA_0,
+    (GDT_IDX_DATA_0 << 3) | 0x000,
     // la pila arranca desde el fin de la pagina y va subiendo al principio
-    mmu_proxima_pagina_fisica_libre() + 0x1000
+    mmu_proxima_pagina_fisica_libre() + PAGE_SIZE
   );
 
   cargar_tss_en_gdt(&tss_inicial, &gdt[GDT_IDX_TSS_INICIAL]);
@@ -55,6 +61,8 @@ void completar_tss(tss* entrada_tss,
   entrada_tss->ebp = esp;
 
   entrada_tss->esp0 = esp0;
+  entrada_tss->esp1 = esp0;
+  entrada_tss->esp2 = esp0;
 
   entrada_tss->cs = cs;
 
@@ -65,6 +73,8 @@ void completar_tss(tss* entrada_tss,
   entrada_tss->ss = ds;
 
   entrada_tss->ss0 = ss0;
+  entrada_tss->ss1 = ss0;
+  entrada_tss->ss2 = ss0;
 
   entrada_tss->eax = 0x00000000;
   entrada_tss->ecx = 0x00000000;
@@ -73,8 +83,6 @@ void completar_tss(tss* entrada_tss,
 
   entrada_tss->esi = 0x00000000;
   entrada_tss->edi = 0x00000000;
-
-  entrada_tss->eip = eip;
 
   entrada_tss->eflags = eeflags;
   entrada_tss->iomap = 0xFFFF;
@@ -85,16 +93,16 @@ void completar_tss_tarea(tss* entrada_tss, perro_t *perro, int index_jugador, in
 
   uint directorio_tarea = mmu_inicializar_memoria_perro(perro, index_jugador, index_tipo);
 
-  completar_tss(&tss_idle,
-    GDT_IDX_CODE_3,
-    GDT_IDX_DATA_3,
+  completar_tss(entrada_tss,
+    (GDT_IDX_CODE_3 << 3) | 0x000,
+    (GDT_IDX_DATA_3 << 3) | 0x000,
     INICIO_PILA_TAREAS - 3 * sizeof(uint),
     INICIO_CODIGO_TAREAS,
     EEFLAGS_INTERRUPCIONES,
     directorio_tarea,
-    GDT_IDX_CODE_0,
+    (GDT_IDX_DATA_0 << 3) | 0x000,
     // la pila arranca desde el fin de la pagina y va subiendo al principio
-    mmu_proxima_pagina_fisica_libre() + 0x1000
+    mmu_proxima_pagina_fisica_libre() + PAGE_SIZE
   );
 }
 
