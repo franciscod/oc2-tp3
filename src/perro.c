@@ -68,6 +68,11 @@ uint game_perro_mover(perro_t *perro, direccion dir)
     int viejo_x = perro->x;
     int viejo_y = perro->y;
 
+    perro->x = nuevo_x;
+    perro->y = nuevo_y;
+
+    mmu_mover_perro(perro, viejo_x, viejo_y);
+
     // ~~~ completar ~~~
     return nuevo_x + nuevo_y + viejo_x + viejo_y + res; // uso todas las variables para que no tire warning->error.
 }

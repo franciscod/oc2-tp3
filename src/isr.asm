@@ -117,7 +117,28 @@ _isr70:
     pushad
     call fin_intr_pic1
 
-    mov eax, 0x42
+    cmp eax, 0x1
+    jz .moverse
 
-    popad
-    iret
+    cmp eax, 0x2
+    jz .cavar
+
+    cmp eax, 0x3
+    jz .olfatear
+
+    cmp eax, 0x4
+    jz .ordenes
+
+    jmp .fin
+
+    .moverse:
+        
+    .cavar:
+
+    .olfatear:
+
+    .ordenes:
+
+    .fin:
+        popad
+        iret

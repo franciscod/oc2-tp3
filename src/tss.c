@@ -26,15 +26,14 @@ void tss_inicializar() {
   tss_inicial.edx = 0xCAFEC170;
 
   completar_tss(&tss_idle,
-    (GDT_IDX_CODE_0 << 3) | 0x000,
-    (GDT_IDX_DATA_0 << 3) | 0x000,
+    (GDT_IDX_CODE_0 << 3) | 000,
+    (GDT_IDX_DATA_0 << 3) | 000,
     STACK_BASE,
     TAREA_IDLE,
     EEFLAGS_INTERRUPCIONES,
     PAGE_DIRECTORY,
-    (GDT_IDX_DATA_0 << 3) | 0x000,
-    // la pila arranca desde el fin de la pagina y va subiendo al principio
-    mmu_proxima_pagina_fisica_libre() + PAGE_SIZE
+    (GDT_IDX_DATA_0 << 3) | 000,
+    STACK_BASE
   );
 
   cargar_tss_en_gdt(&tss_inicial, &gdt[GDT_IDX_TSS_INICIAL]);
@@ -94,13 +93,13 @@ void completar_tss_tarea(tss* entrada_tss, perro_t *perro, int index_jugador, in
   uint directorio_tarea = mmu_inicializar_memoria_perro(perro, index_jugador, index_tipo);
 
   completar_tss(entrada_tss,
-    (GDT_IDX_CODE_3 << 3) | 0x000,
-    (GDT_IDX_DATA_3 << 3) | 0x000,
+    (GDT_IDX_CODE_3 << 3) | 000,
+    (GDT_IDX_DATA_3 << 3) | 000,
     INICIO_PILA_TAREAS - 3 * sizeof(uint),
     INICIO_CODIGO_TAREAS,
     EEFLAGS_INTERRUPCIONES,
     directorio_tarea,
-    (GDT_IDX_DATA_0 << 3) | 0x000,
+    (GDT_IDX_DATA_0 << 3) | 000,
     // la pila arranca desde el fin de la pagina y va subiendo al principio
     mmu_proxima_pagina_fisica_libre() + PAGE_SIZE
   );
