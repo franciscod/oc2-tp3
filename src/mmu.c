@@ -107,7 +107,7 @@ uint mmu_inicializar_dir_kernel() {
 	// identity mapping
 	for (uint i = 0; i < 1024; i++) {
 		uint addr = i<<12;
-		mmu_mapear_pagina(addr, PAGE_DIRECTORY, addr, ATTRS_TABLA);
+		mmu_mapear_pagina(addr, PAGE_DIRECTORY, addr, ATTRS_TABLA_RW_S);
 	}
 
 	return PAGE_DIRECTORY;
@@ -131,7 +131,7 @@ uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_
 	uint fisica_codigo_src = 0x10000 + index_jugador * 0x2000 + index_tipo * 0x1000;
 	uint fisica_codigo_dst = mmu_xy2fisica(perro->x, perro->y);
 	uint virtual_codigo_dst = mmu_xy2virtual(perro->x, perro->y);
-	mmu_mapear_pagina(virtual_codigo_dst, PAGE_DIRECTORY, fisica_codigo_dst, ATTRS_TABLA);
+	mmu_mapear_pagina(virtual_codigo_dst, PAGE_DIRECTORY, fisica_codigo_dst, ATTRS_TABLA_RW_U);
 
 	mmu_copiar_pagina(fisica_codigo_src, virtual_codigo_dst);
 
@@ -139,12 +139,12 @@ uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_
 	// identity mapping
 	for (uint i = 0; i < 1024; i++) {
 		uint addr = i<<12;
-		mmu_mapear_pagina(addr, directorio, addr, ATTRS_TABLA);
+		mmu_mapear_pagina(addr, directorio, addr, ATTRS_TABLA_RW_S);
 	}
 
-	mmu_mapear_pagina(ADDR_VIRTUAL_COMPARTIDA, directorio, pag_compartida[index_jugador], ATTRS_TABLA);
-	mmu_mapear_pagina(ADDR_VIRTUAL_CODIGO, directorio, fisica_codigo_dst, ATTRS_TABLA);
-	mmu_mapear_pagina(virtual_codigo_dst, directorio, fisica_codigo_dst, ATTRS_TABLA);
+	mmu_mapear_pagina(ADDR_VIRTUAL_COMPARTIDA, directorio, pag_compartida[index_jugador], ATTRS_TABLA_RW_U);
+	mmu_mapear_pagina(ADDR_VIRTUAL_CODIGO, directorio, fisica_codigo_dst, ATTRS_TABLA_RW_U);
+	mmu_mapear_pagina(virtual_codigo_dst, directorio, fisica_codigo_dst, ATTRS_TABLA_RW_U);
 
 	uint * virtual_codigo_dst_ptr = (uint *) virtual_codigo_dst;
 

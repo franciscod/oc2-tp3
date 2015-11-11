@@ -63,7 +63,7 @@ void idt_inicializar() {
 
     IDT_ENTRY(32, 0) // clock
     IDT_ENTRY(33, 0) // teclado
-    
-    IDT_ENTRY(70, 0) // syscall
+
+    IDT_ENTRY(70, 3) // syscall
 
 }

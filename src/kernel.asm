@@ -10,10 +10,10 @@ extern IDT_DESC
 
 GDT_IDX_CODE_0       equ 8
 GDT_IDX_DATA_0       equ 10
+
 GDT_IDX_TSS_PERRO_START equ 15 ; 8x15
 
 
-; FIXME privs
 GDT_SELECTOR_CODE_0          equ 64  ; 8x8
 GDT_SELECTOR_CODE_3          equ 72  ; 8x9
 GDT_SELECTOR_DATA_0          equ 80  ; 8x10
@@ -21,7 +21,8 @@ GDT_SELECTOR_DATA_3          equ 88  ; 8x11
 GDT_SELECTOR_UI              equ 96  ; 8x12
 GDT_SELECTOR_TSS_INICIAL     equ 104 ; 8x13 -- tss 104 -- illuminati confirmed
 GDT_SELECTOR_TSS_IDLE        equ 112 ; 8x14
-GDT_SELECTOR_TSS_PERRO_START equ 120 ; 8x15
+
+GDT_SELECTOR_TSS_PERRO_START equ 123 ; 8x15
 
 STACK_BASE equ 0x27000 ; 5.1.b enunciado
 
@@ -39,7 +40,7 @@ extern habilitar_pic, resetear_pic
 extern perrolandia
 extern tss_inicializar
 
-extern tss_jugadorA, completar_tss_tarea, cargar_tss_en_gdt, tss_perrito ; 5.6.h
+extern completar_tss_tarea, cargar_tss_en_gdt, tss_perrito ; 5.6.h
 
 global start
 
@@ -229,13 +230,7 @@ altosalto:
         call cargar_tss_en_gdt
         add esp, 8
 
-    ; mov ax, GDT_SELECTOR_TSS_PERRO_START
-    ; ltr ax
-    ; xchg bx, bx
-    ; mov ax, GDT_SELECTOR_TSS_INICIAL
-    ; ltr ax
-    ;xchg bx, bx
-    jmp GDT_SELECTOR_TSS_PERRO_START:0
+        jmp GDT_SELECTOR_TSS_PERRO_START:0
     ; 5.6.h
 
     ; Saltar a la primera tarea: Idle

@@ -21,11 +21,16 @@
 
 //						IGN  PS IGN A PCD PWT U/S R/W P
 //						0000 0  0   0 0   0   0   0   1
-#define ATTRS_TABLA 	0x001
+#define ATTRS_TABLA_RO_U   0x005
+#define ATTRS_TABLA_RO_S   0x001
+#define ATTRS_TABLA_RW_U   0x007
+#define ATTRS_TABLA_RW_S   0x003
 
 //						IGN G PAT D A PCD PWT U/S R/W P
 //						000 0 0   0 0 0   0   0   0   1
-#define ATTRS_PAGINA	0x001
+#define ATTRS_PAGINA_U	ATTRS_TABLA_U
+#define ATTRS_PAGINA_S	ATTRS_TABLA_S
+
 #define ATTRS_MASK 		0xFFF
 
 #define CLEAR_ATTRS_MASK		0xFFFFF000
