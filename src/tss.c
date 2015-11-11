@@ -8,6 +8,7 @@
 #include "tss.h"
 #include "mmu.h"
 #include "defines.h"
+#include "screen.h"
 
 #define EEFLAGS_INTERRUPCIONES  0x00000202
 #define INICIO_CODIGO_TAREAS    0x00401000
@@ -15,6 +16,7 @@
 // inicioTSSs
 tss tss_inicial;
 tss tss_idle;
+tss tss_perrito;
 tss tss_jugadorA[MAX_CANT_PERROS_VIVOS];
 tss tss_jugadorB[MAX_CANT_PERROS_VIVOS];
 
@@ -26,13 +28,13 @@ void tss_inicializar() {
   tss_inicial.edx = 0xCAFEC170;
 
   completar_tss(&tss_idle,
-    (GDT_IDX_CODE_0 << 3) | 000,
-    (GDT_IDX_DATA_0 << 3) | 000,
+    (GDT_IDX_CODE_0 << 3) | 0, //FIXME privs
+    (GDT_IDX_DATA_0 << 3) | 0, //FIXME privs
     STACK_BASE,
     TAREA_IDLE,
     EEFLAGS_INTERRUPCIONES,
     PAGE_DIRECTORY,
-    (GDT_IDX_DATA_0 << 3) | 000,
+    (GDT_IDX_DATA_0 << 3) | 0, //FIXME privs
     STACK_BASE
   );
 
@@ -51,6 +53,10 @@ void completar_tss(tss* entrada_tss,
                    unsigned short ss0,
                    uint esp0
                  ) {
+
+  print_hex((uint) &tss_perrito, 8, 10, 6, 0x7c);
+  print_hex((uint) entrada_tss,  8, 10, 7, 0x7c);
+
 
   entrada_tss->cr3 = cr3;
 
@@ -92,14 +98,17 @@ void completar_tss_tarea(tss* entrada_tss, perro_t *perro, int index_jugador, in
 
   uint directorio_tarea = mmu_inicializar_memoria_perro(perro, index_jugador, index_tipo);
 
+  print_hex((uint) &tss_perrito, 8, 10, 3, 0x7c);
+  print_hex((uint) entrada_tss,  8, 10, 4, 0x7c);
+
   completar_tss(entrada_tss,
-    (GDT_IDX_CODE_3 << 3) | 000,
-    (GDT_IDX_DATA_3 << 3) | 000,
+    (GDT_IDX_CODE_3 << 3) | 0, //FIXME privs
+    (GDT_IDX_DATA_3 << 3) | 0, //FIXME privs
     INICIO_PILA_TAREAS - 3 * sizeof(uint),
     INICIO_CODIGO_TAREAS,
     EEFLAGS_INTERRUPCIONES,
     directorio_tarea,
-    (GDT_IDX_DATA_0 << 3) | 000,
+    (GDT_IDX_DATA_0 << 3) | 0,
     // la pila arranca desde el fin de la pagina y va subiendo al principio
     mmu_proxima_pagina_fisica_libre() + PAGE_SIZE
   );
@@ -107,6 +116,21 @@ void completar_tss_tarea(tss* entrada_tss, perro_t *perro, int index_jugador, in
 
 void cargar_tss_en_gdt(tss* entrada_tss,
                        gdt_entry* entrada_gdt) {
+
+    print_hex((uint) &tss_inicial,  8, 10, 10, 0x7c);
+    print_hex((uint) &tss_idle,     8, 10, 11, 0x7c);
+    print_hex((uint) &tss_perrito, 8, 10, 12, 0x7c);
+    print_hex((uint) &tss_jugadorA, 8, 10, 13, 0x7c);
+    print_hex((uint) &tss_jugadorB, 8, 10, 14, 0x7c);
+    print_hex((uint) entrada_tss,  8, 10, 16, 0x7c);
+
+    print_hex((uint) &gdt[GDT_IDX_TSS_INICIAL],  8, 20, 10, 0x7c);
+    print_hex((uint) &gdt[GDT_IDX_TSS_IDLE],     8, 20, 11, 0x7c);
+    print_hex((uint) &gdt[GDT_IDX_TSS_PERRO_START], 8, 20, 12, 0x7c);
+    print_hex((uint) &gdt[GDT_IDX_TSS_PERRO_START+8], 8, 20, 13, 0x7c);
+    print_hex((uint) entrada_gdt,  8, 20, 16, 0x7c);
+
+    //breakpoint();
 
     uint base = (uint) entrada_tss;
 
@@ -118,7 +142,7 @@ void cargar_tss_en_gdt(tss* entrada_tss,
 
     entrada_gdt->type        = 0b1001;
     entrada_gdt->s           = 0b0;
-    entrada_gdt->dpl         = 0b00;
+    entrada_gdt->dpl         = 0b00; //FIXME privs
     entrada_gdt->p           = 0b1;
     entrada_gdt->avl         = 1;
     entrada_gdt->l           = 0;

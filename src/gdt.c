@@ -57,7 +57,7 @@ gdt_entry gdt[GDT_COUNT] = {
         (unsigned char)     0x00,           /* base[23:16]  */
         (unsigned char)     TYPE_CODE_XR,   /* type         */
         (unsigned char)     S_CODE_OR_DATA, /* s            */
-        (unsigned char)     0x03,           /* dpl          */
+        (unsigned char)     0x00,           /* dpl          */ // FIXME privs
         (unsigned char)     PRESENT,        /* p            */
         (unsigned char)     LIMIT_500M_19_16, /* limit[16:19] */
         (unsigned char)     AVL,  /* avl          */
@@ -89,7 +89,7 @@ gdt_entry gdt[GDT_COUNT] = {
         (unsigned char)     0x00,           /* base[23:16]  */
         (unsigned char)     TYPE_DATA_RW,   /* type         */
         (unsigned char)     S_CODE_OR_DATA, /* s            */
-        (unsigned char)     0x03,           /* dpl          */
+        (unsigned char)     0x00,           /* dpl          */ // FIXME privs
         (unsigned char)     PRESENT,        /* p            */
         (unsigned char)     LIMIT_500M_19_16, /* limit[16:19] */
         (unsigned char)     AVL,  /* avl          */

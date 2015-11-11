@@ -17,8 +17,8 @@ void actualizar(int *x, int *y, int direccion);
 
 void task(int x_origen, int y_origen) {
     /* Tarea */
- 
-
+    breakpoint();
+    
 	int x_actual = x_origen;
 	int y_actual = y_origen;
 
@@ -29,13 +29,13 @@ void task(int x_origen, int y_origen) {
 		int direccion = syscall_olfatear();
 		if (direccion == AQUI)
 			break;
-		
+
 		actualizar(&x_actual, &y_actual, direccion);
 		syscall_moverse(direccion);
 	}
 	while (syscall_cavar() != 0)
 	{}
-	
+
 
 	ir_hacia_desde(x_origen, y_origen, x_actual, y_actual);
 
@@ -58,8 +58,8 @@ void ir_hacia_desde(char x_dest, char y_dest, char x_actual, char y_actual)
 	char dir_h = x_dest > x_actual ? DER : IZQ;
 	char dir_v = y_dest > y_actual ? ABA : ARR;
 
-	int dist_x = x_dest > x_actual ? x_dest - x_actual : x_actual - x_dest;	
-	int dist_y = y_dest > y_actual ? y_dest - y_actual : y_actual - y_dest;	
+	int dist_x = x_dest > x_actual ? x_dest - x_actual : x_actual - x_dest;
+	int dist_y = y_dest > y_actual ? y_dest - y_actual : y_actual - y_dest;
 
 	int i = 0;
 	for (i = dist_x; i>0; i--)
@@ -69,4 +69,3 @@ void ir_hacia_desde(char x_dest, char y_dest, char x_actual, char y_actual)
 		syscall_moverse(dir_v);
 
 }
-

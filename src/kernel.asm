@@ -10,14 +10,18 @@ extern IDT_DESC
 
 GDT_IDX_CODE_0       equ 8
 GDT_IDX_DATA_0       equ 10
+GDT_IDX_TSS_PERRO_START equ 15 ; 8x15
 
-GDT_OFFSET_CODE_0          equ 64  ; 8x8
-GDT_OFFSET_CODE_3          equ 72  ; 8x9
-GDT_OFFSET_DATA_0          equ 80  ; 8x10
-GDT_OFFSET_DATA_3          equ 88  ; 8x11
-GDT_OFFSET_UI              equ 96  ; 8x12
-GDT_OFFSET_TSS_INICIAL     equ 104 ; 8x13 -- tss 104 -- illuminati confirmed
-GDT_OFFSET_TSS_IDLE        equ 112 ; 8x14
+
+; FIXME privs
+GDT_SELECTOR_CODE_0          equ 64  ; 8x8
+GDT_SELECTOR_CODE_3          equ 72  ; 8x9
+GDT_SELECTOR_DATA_0          equ 80  ; 8x10
+GDT_SELECTOR_DATA_3          equ 88  ; 8x11
+GDT_SELECTOR_UI              equ 96  ; 8x12
+GDT_SELECTOR_TSS_INICIAL     equ 104 ; 8x13 -- tss 104 -- illuminati confirmed
+GDT_SELECTOR_TSS_IDLE        equ 112 ; 8x14
+GDT_SELECTOR_TSS_PERRO_START equ 120 ; 8x15
 
 STACK_BASE equ 0x27000 ; 5.1.b enunciado
 
@@ -34,6 +38,8 @@ extern mmu_inicializar_memoria_perro
 extern habilitar_pic, resetear_pic
 extern perrolandia
 extern tss_inicializar
+
+extern tss_jugadorA, completar_tss_tarea, cargar_tss_en_gdt, tss_perrito ; 5.6.h
 
 global start
 
@@ -87,12 +93,12 @@ start:
     mov cr0, eax
 
     ; Saltar a modo protegido
-    jmp GDT_OFFSET_CODE_0:altosalto
+    jmp GDT_SELECTOR_CODE_0:altosalto
 
 BITS 32
 altosalto:
     ; Establecer selectores de segmentos
-    mov ax, GDT_OFFSET_DATA_0
+    mov ax, GDT_SELECTOR_DATA_0
     mov ds, ax
     mov es, ax
     mov fs, ax
@@ -189,14 +195,51 @@ altosalto:
     call habilitar_pic
 
     ; Cargar tarea inicial
-    mov ax, GDT_OFFSET_TSS_INICIAL
+    mov ax, GDT_SELECTOR_TSS_INICIAL
     ltr ax
 
     ; Habilitar interrupciones
     sti
 
+    ; 5.6.h
+        push 0 ; id
+        push 0 ;index
+        push jugadorA
+        push perrolandia
+        call game_perro_inicializar
+        add esp, 16
+
+        push 0 ; tipo
+        push perrolandia
+        call game_perro_reciclar_y_lanzar
+        add esp, 8
+
+        push 0 ; index_tipo
+        push 0 ; index_jugador
+        push perrolandia ; perros
+        push tss_perrito ; tss
+        call completar_tss_tarea
+        add esp, 16
+
+        mov eax, GDT_IDX_TSS_PERRO_START
+        imul eax, 8
+        add eax, [GDT_DESC+2]
+        push eax
+        push tss_perrito
+        call cargar_tss_en_gdt
+        add esp, 8
+
+    ; mov ax, GDT_SELECTOR_TSS_PERRO_START
+    ; ltr ax
+    ; xchg bx, bx
+    ; mov ax, GDT_SELECTOR_TSS_INICIAL
+    ; ltr ax
+    ;xchg bx, bx
+    jmp GDT_SELECTOR_TSS_PERRO_START:0
+    ; 5.6.h
+
     ; Saltar a la primera tarea: Idle
-    jmp GDT_OFFSET_TSS_IDLE:0
+    ;jmp GDT_SELECTOR_TSS_IDLE:0
 
     ; Ciclar infinitamente (por si algo sale mal...)
     mov eax, 0xFFFF
@@ -216,7 +259,7 @@ pintar_extremo_ui:
     ; segmento.
     push ax
     push es
-    mov ax, GDT_OFFSET_UI
+    mov ax, GDT_SELECTOR_UI
 
     mov es, ax
     mov byte [es:0x01], 0x1B ; fondo azul, letra cyan
@@ -238,7 +281,7 @@ escribir_afuera_de_video:
     push ax
     push es
 
-    mov ax, GDT_OFFSET_UI
+    mov ax, GDT_SELECTOR_UI
 
     mov es, ax
     mov byte [es:0xFFFFFFFF], 0x42 ; escribe bien afuera
