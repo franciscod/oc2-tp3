@@ -82,7 +82,7 @@ excepcion_cpu_19_msg db 'Excepcion 19 -- me cuelgo'
 excepcion_cpu_19_len equ $ - excepcion_cpu_19_msg
 
 
-extern screen_actualizar_reloj_global, screen_pintar_info_debug
+extern screen_actualizar_reloj_global, screen_pintar_info_debug, screen_redibujar_atras_debug
 extern print_hex
 
 extern game_atender_tick, game_atender_teclado, game_syscall_manejar
@@ -95,6 +95,7 @@ extern debugging_mode
 global _isr%1
 
 _isr%1:
+    call fin_intr_pic1
     mov eax, %1
 
     ;TODO debugger
@@ -110,14 +111,31 @@ _isr%1:
 
     cmp byte [debugging_mode], 0
     je .desaloja
+        push dword [esp+4]
+        push esp
+        pushfd ;; eflags
+        push ss
+        push gs
+        push fs
+        push ds
+        push cs
+        push ebp
+        push edi
+        push esi
+        push edx
+        push ecx
+        push ebx
+        push eax
 
-    call screen_pintar_info_debug
+        call screen_pintar_info_debug
 
-    mov byte [debugging_mode], 0    ; Cuando vuelva a tocar la y vuelve a poner el flag en 1
+        .paused:
+            cmp byte [debugging_mode], 0
+            je .redibuja
+            jmp .paused
 
-    .paused:
-    cmp byte [debugging_mode], 0
-    je .paused
+        .redibuja:
+            call screen_redibujar_atras_debug
 
     .desaloja:
 
@@ -126,7 +144,7 @@ _isr%1:
 
     ;imprimir_texto_mp excepcion_cpu_%1_msg, excepcion_cpu_%1_len, 0x07, 8, 8
     ;jmp $
-    
+
 %endmacro
 
 ;;
@@ -194,6 +212,7 @@ _isr33:
         jnz .fin
 
         push eax
+        xchg bx, bx
         call game_atender_teclado
         add esp, 4
 
