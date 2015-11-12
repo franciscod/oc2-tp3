@@ -45,7 +45,7 @@ void game_atender_tick(perro_t *perro)
 		screen_actualizar_reloj_perro(perro);
 		game_perro_ver_si_en_cucha(perro);
 	}
-	
+
 	game_terminar_si_es_hora();
 }
 
@@ -115,14 +115,7 @@ void game_atender_teclado(unsigned char tecla)
 		case KB_n: game_jugador_dar_orden(&jugadorB, 2); break;
 		case KB_m: game_jugador_dar_orden(&jugadorB, 3); break;
 
-		// TODO: debuguear
-		//Implementar el mecanismo de debugging explicado en la sección 4.8 que indicará en pan-
-		//talla la razón del desalojo de una tarea.
-		case KB_y: 
-			// screen_pintar_rect(debugging_mode, 0, 10, 10, 17, 40); 
-			debugging_mode = 1;
-			// screen_pintar_info_debug();
-			break;
+		case KB_y: debugging_mode ^= 1; break;
 
 		default: break;
 	}
