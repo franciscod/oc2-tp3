@@ -63,17 +63,16 @@ void sched_remover_tarea(unsigned int gdt_index)
 uint sched_proxima_a_ejecutar()
 {
     int i_final = scheduler.current;
-    int i = i_final + 1;
 
     if (scheduler.current == NO_CURRENT) {
-        i = 0;
         i_final = MAX_CANT_TAREAS_VIVAS-1;
     }
+    int i = i_final;
 
     jugador_t *j = sched_tarea_actual()->jugador;
 
     // busca una del jugador opuesto
-    while (i != i_final) {
+    do {
         if (scheduler.tasks[i].gdt_index != NULL) {
             if (scheduler.tasks[i].perro->jugador != j) {
                 scheduler.current = i;
@@ -82,10 +81,10 @@ uint sched_proxima_a_ejecutar()
         }
         i++;
         i %= MAX_CANT_TAREAS_VIVAS;
-    }
+    } while (i != i_final);
 
     // busca una del mismo jugador
-    while (i != i_final) {
+    do {
         if (scheduler.tasks[i].gdt_index != NULL) {
             if (scheduler.tasks[i].perro->jugador == j) {
                 scheduler.current = i;
@@ -95,7 +94,7 @@ uint sched_proxima_a_ejecutar()
 
         i++;
         i %= MAX_CANT_TAREAS_VIVAS;
-    }
+    } while (i != i_final);
 
     scheduler.current = NO_CURRENT;
     return GDT_IDX_TSS_IDLE << 3 | 0; // esto se alcanzaria si no hay tareas corriendo
