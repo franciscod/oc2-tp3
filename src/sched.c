@@ -11,12 +11,15 @@ definicion de funciones del scheduler
 #include "screen.h"
 
 sched_t scheduler;
+int ultima_tarea_jug[2];
 
 #define NO_CURRENT ((unsigned short) -1)
 
 void sched_inicializar()
 {
     scheduler.current = NO_CURRENT;
+    ultima_tarea_jug[0] = 0;
+    ultima_tarea_jug[1] = 0;
     for (int i = 0; i<MAX_CANT_TAREAS_VIVAS; i++) {
         sched_task_t *t = &scheduler.tasks[i];
         t->gdt_index = NULL;
@@ -67,45 +70,71 @@ void sched_desalojame_esta()
 }
 
 
+uint sched_indice_proxima_tarea_jugador(uint idx_jugador) {
+    int i;
+    //primero arranca desde la siguiente a la actual
+    for(i=ultima_tarea_jug[idx_jugador]+1; i<MAX_CANT_TAREAS_VIVAS; i++) {
+        if (scheduler.tasks[i].gdt_index == NULL) continue;
+        if (scheduler.tasks[i].perro->jugador->index != idx_jugador) continue;
+        return i;
+    }
+    //despues prueba desde el principio
+    for(i=0; i<MAX_CANT_TAREAS_VIVAS; i++) {
+        if (scheduler.tasks[i].gdt_index == NULL) continue;
+        if (scheduler.tasks[i].perro->jugador->index != idx_jugador) continue;
+        return i;
+    }
+    // si no encontro nada, devuelve el tope
+    return MAX_CANT_TAREAS_VIVAS;
+}
+
+void sched_setear_como_ultima(uint i) {
+    uint idx_jugador = scheduler.tasks[i].perro->jugador->index;
+    ultima_tarea_jug[idx_jugador] = i;
+    scheduler.current = i;
+}
+
+
 uint sched_proxima_a_ejecutar()
 {
-    int i_final = scheduler.current + 1;
+    perro_t *p = sched_tarea_actual();
+    int i;
 
-    if (scheduler.current == NO_CURRENT) {
-        i_final = 0;
+    if (p == NULL) { // no hay tareas actualmente
+
+        // busca la primera libre y pone esa
+        for(i=0; i<MAX_CANT_TAREAS_VIVAS; i++) {
+            if (scheduler.tasks[i].gdt_index == NULL) continue;
+            sched_setear_como_ultima(i);
+            return scheduler.tasks[i].gdt_index << 3 | 0;
+        }
+
+    } else { // hay una tarea corriendo
+        jugador_t *j = sched_tarea_actual()->jugador;
+        uint idx_jugador_opuesto = !j->index;
+        uint idx_jugador_actual = j->index;
+        // primero buscamos tareas del jugador opuesto
+
+        i = sched_indice_proxima_tarea_jugador(idx_jugador_opuesto);
+        if (i == MAX_CANT_TAREAS_VIVAS) {
+            // el opuesto no tiene ninguna, probemos el actual
+            i = sched_indice_proxima_tarea_jugador(idx_jugador_actual);
+
+            if (i == MAX_CANT_TAREAS_VIVAS) {
+                // ningun jugador tiene tareas para correr
+                // va la idle
+                scheduler.current = NO_CURRENT;
+                return GDT_IDX_TSS_IDLE << 3 | 0;
+            }
+        }
+        // va la que encontramos
+        sched_setear_como_ultima(i);
+        return scheduler.tasks[i].gdt_index << 3 | 0;
     }
-    i_final %= MAX_CANT_TAREAS_VIVAS;;
-    int i = i_final;
 
-    jugador_t *j = sched_tarea_actual()->jugador;
-
-    // busca una del jugador opuesto
-    do {
-        if (scheduler.tasks[i].gdt_index != NULL) {
-            if (scheduler.tasks[i].perro->jugador != j) {
-                scheduler.current = i;
-                return scheduler.tasks[i].gdt_index << 3 | 0;
-            }
-        }
-        i++;
-        i %= MAX_CANT_TAREAS_VIVAS;
-    } while (i != i_final);
-
-    // busca una del mismo jugador
-    do {
-        if (scheduler.tasks[i].gdt_index != NULL) {
-            if (scheduler.tasks[i].perro->jugador == j) {
-                scheduler.current = i;
-                return scheduler.tasks[i].gdt_index << 3 | 0;
-            }
-        }
-
-        i++;
-        i %= MAX_CANT_TAREAS_VIVAS;
-    } while (i != i_final);
-
+     // no deberia alcanzarse
     scheduler.current = NO_CURRENT;
-    return GDT_IDX_TSS_IDLE << 3 | 0; // esto se alcanzaria si no hay tareas corriendo
+    return GDT_IDX_TSS_IDLE << 3 | 0;
 }
 
 
