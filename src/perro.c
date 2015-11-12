@@ -28,6 +28,7 @@ void game_perro_reciclar_y_lanzar(perro_t *perro, uint tipo)
 	perro->x = j->x_cucha;
 	perro->y = j->y_cucha;
 	perro->tipo = tipo;
+	perro->huesos = 0;
 	perro->libre = FALSE;
 
 	int tss_idx = j->index * MAX_CANT_PERROS_VIVOS + perro->index;
@@ -45,7 +46,10 @@ void game_perro_termino(perro_t *perro)
 {
 	perro->libre = TRUE;
 
+	sched_remover_tarea(perro->id);
+
 	screen_borrar_perro(perro);
+	screen_actualizar_posicion_mapa(perro->x, perro->y);
 	screen_pintar_reloj_perro(perro);
 
 }
@@ -105,13 +109,21 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 // *** viene del syscall cavar ***
 uint game_perro_cavar(perro_t *perro)
 {
-	// TODO Cavar. En caso de estar sobre un escondite aumenta en 1 la cantidad de huesos del
-	// perro y disminuye en 1 la cantidad de huesos del escondite. La cantidad de huesos en
-	// cada escondite están dados por una variable global llamada huesos en game.h. El perro
-	// puede llevar hasta 10 huesos, luego de eso el syscall debe ignorar el pedido.
+	int i;
+	if (perro->huesos >= 10) return 0;
+	if (game_huesos_en_posicion(perro->x, perro->y) <= 0) return 0;
 
-	// ~~~ completar ~~~
-	return 0;
+	for (i = 0; i < ESCONDITES_CANTIDAD; i++)
+	{
+		if (escondites[i][0] == perro->x && escondites[i][1] == perro->y) break;
+	}
+
+	escondites[i][2]--;
+	perro->huesos++;
+	//print_dec(escondites[i][2], 4, 2, 49, 0x1F);
+	//print_dec(perro->huesos,    2, 7, 49, 0x1F);
+
+	return 1;
 }
 
 // recibe un perro, devueve la dirección del hueso más cercano
@@ -166,6 +178,9 @@ void game_perro_ver_si_en_cucha(perro_t *perro)
 
 	game_jugador_anotar_punto(perro->jugador);
 	perro->huesos--;
+
+	//print_dec(perro->huesos,    2, 7, 49, 0x1F);
+
 	if (perro->huesos == 0)
 		game_perro_termino(perro);
 }

@@ -45,6 +45,8 @@ void print(const char * text, unsigned int x, unsigned int y, unsigned short att
 // imprime un numero en hexa en pantalla
 void print_hex(unsigned int numero, int size, unsigned int x, unsigned int y, unsigned short attr);
 
+// imprime un numero en decimal en pantalla
+void print_dec(unsigned int numero, int size, unsigned int x, unsigned int y, unsigned short attr);
 
 // pinta un rectangulo en pantalla
 void screen_pintar_rect(unsigned char c, unsigned char color, int fila, int columna, int alto, int ancho);
