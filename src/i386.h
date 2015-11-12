@@ -26,6 +26,8 @@ LS_INLINE unsigned short rtr(void);
 LS_INLINE void hlt(void);
 LS_INLINE void breakpoint(void);
 
+LS_INLINE void jmp_task_switch(unsigned int gdt_index);
+
 /*
  * Implementaciones
  */
@@ -102,6 +104,11 @@ LS_INLINE void hlt(void) {
 
 LS_INLINE void breakpoint(void) {
     __asm __volatile("xchg %%bx, %%bx" : :);
+}
+
+
+LS_INLINE void jmp_task_switch(unsigned int gdt_index) {
+    __asm __volatile("movl %0,%%cr4" : : "r" (gdt_index));
 }
 
 #endif  /* !__i386_H__ */

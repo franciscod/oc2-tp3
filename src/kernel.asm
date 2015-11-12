@@ -37,13 +37,17 @@ extern game_perro_inicializar
 extern game_perro_reciclar_y_lanzar
 extern mmu_inicializar_memoria_perro
 extern habilitar_pic, resetear_pic
-extern perrolandia
 extern tss_inicializar
+extern sched_inicializar
 
 extern completar_tss_tarea, cargar_tss_en_gdt, tss_perrito ; 5.6.h
 
 global start
 
+
+
+idle_offset:     dd 0x00
+idle_selector:   dw 0x00
 
 ;; Saltear seccion de datos
 jmp start
@@ -189,6 +193,7 @@ altosalto:
 
 
     ; Inicializar el scheduler
+    call sched_inicializar
 
     ; Inicializar la IDT
     call idt_inicializar
@@ -210,7 +215,7 @@ altosalto:
     ; Habilitar interrupciones
     sti
 
-    ; 5.6.h
+    ;; 5.6.h
     ;    push 0 ; id
     ;    push 0 ;index
     ;    push jugadorA
@@ -218,12 +223,12 @@ altosalto:
     ;    call game_perro_inicializar
     ;    add esp, 16
 
-    ;    push 0 ; tipo
+    ;    push 1 ; tipo
     ;    push perrolandia
     ;    call game_perro_reciclar_y_lanzar
     ;    add esp, 8
 
-    ;    push 0 ; index_tipo
+    ;    push 1 ; index_tipo
     ;    push 0 ; index_jugador
     ;    push perrolandia ; perros
     ;    push tss_perrito ; tss
@@ -239,10 +244,12 @@ altosalto:
     ;    add esp, 8
 
     ;    jmp GDT_SELECTOR_TSS_PERRO_START:0
-    ; 5.6.h
+    ;; 5.6.h
 
     ; Saltar a la primera tarea: Idle
-    jmp GDT_SELECTOR_TSS_IDLE:0
+    mov word [idle_selector], GDT_SELECTOR_TSS_IDLE
+    jmp far [idle_offset]
+    ;jmp GDT_SELECTOR_TSS_IDLE:0
 
     ; Ciclar infinitamente (por si algo sale mal...)
     mov eax, 0xFFFF

@@ -135,7 +135,6 @@ uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_
 
 	mmu_copiar_pagina(fisica_codigo_src, virtual_codigo_dst);
 
-	// TODO quiza debamos cambiar los atributos de estas paginas
 	// identity mapping
 	for (uint i = 0; i < 1024; i++) {
 		uint addr = i<<12;
@@ -173,7 +172,7 @@ uint mmu_xy2virtual(uint x, uint y) {
 	return MAPA_BASE_VIRTUAL + game_xy2lineal(x, y) * 0x1000;
 }
 
-// debe remapear y copiar el codigo
+// debe remapear y copiar el codigo TODO
 void mmu_mover_perro(perro_t *perro, int viejo_x, int viejo_y) {
-
+	
 }

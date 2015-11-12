@@ -17,9 +17,10 @@ void wait(int pseudosecs)
 	for (count = 0; count < pseudosecs * 1000000; count++) {}
 }
 
+
 uint game_syscall_manejar(uint syscall, uint param1) // eax, ecx
 {
-	perro_t *perro = NULL; // FIXME
+	perro_t *perro = sched_tarea_actual();
 	jugador_t *j = perro->jugador;
 
 	switch (syscall) {
@@ -43,20 +44,13 @@ uint game_syscall_manejar(uint syscall, uint param1) // eax, ecx
 // ~~~ recibe el perro que está corriendo actualmente
 void game_atender_tick(perro_t *perro)
 {
-	/*T
+	screen_actualizar_reloj_global();
+	
+	/*
 	    ;TODO Modificar el código necesario para que se realice el intercambio de tareas por cada ciclo de
 	    ; reloj. El intercambio se realizará según indique la función sched_proxima_a_ejecutar().
+		*/
 
-	    ;TODO
-	    ;Reemplazar el llamado a game_atender_tick por uno a sched_atender_tick en el handler
-	    ;de la interrupción de reloj.
-
-	    ;call sched_atender_tick
-	    ;push eax
-	    ;call game_atender_tick
-	    ;add esr, 4*/
-
-	screen_actualizar_reloj_global();
 }
 
 
@@ -88,6 +82,8 @@ void game_atender_tick(perro_t *perro)
 #define KB_shiftL   0x2a // 0xaa
 #define KB_shiftR   0x36 // 0xb6
 
+#define KB_y        0x15 // debug mode TODO
+
 
 // ~~~ debe atender la interrupción de teclado, se le pasa la tecla presionada
 void game_atender_teclado(unsigned char tecla)
@@ -98,8 +94,11 @@ void game_atender_teclado(unsigned char tecla)
 
 	switch (tecla)
 	{
-		// ~~~ completar ~~~
-		case KB_q: game_jugador_lanzar_perro(&jugadorA, TIPO_1, 0, 0); break;
+		// FIXME los perros salen siempre de la cucha o de la pos del jugador?
+		case KB_q: game_jugador_lanzar_perro(&jugadorA, TIPO_1, jugadorA.x_cucha, jugadorA.y_cucha); break;
+		case KB_e: game_jugador_lanzar_perro(&jugadorA, TIPO_2, jugadorA.x_cucha, jugadorA.y_cucha); break;
+		case KB_u: game_jugador_lanzar_perro(&jugadorB, TIPO_1, jugadorB.x_cucha, jugadorB.y_cucha); break;
+		case KB_o: game_jugador_lanzar_perro(&jugadorB, TIPO_2, jugadorB.x_cucha, jugadorB.y_cucha); break;
 
 		case KB_w: game_jugador_moverse(&jugadorA, 0,  -1); break;
 		case KB_s: game_jugador_moverse(&jugadorA, 0,  1); break;

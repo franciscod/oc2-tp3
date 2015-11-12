@@ -27,7 +27,7 @@
 ;;
 ;;  Nota:
 ;;      * Solo funciona en MODO PROTEGIDO.
-;;      * TODOS los parámetros son de 32 BITS.
+;;      * Todos los parámetros son de 32 BITS.
 ;;
 %macro imprimir_texto_mp 5
     pushad
@@ -91,7 +91,7 @@
 ;;
 ;;  Nota:
 ;;      * Solo funciona en MODO REAL.
-;;      * TODOS los parámetros son de 16 BITS.
+;;      * Todos los parámetros son de 16 BITS.
 ;;
 %macro imprimir_texto_mr 5
     pusha

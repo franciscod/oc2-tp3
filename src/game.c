@@ -20,10 +20,6 @@ int escondites[ESCONDITES_CANTIDAD][3] = { // TRIPLAS DE LA FORMA (X, Y, HUESOS)
 jugador_t jugadorA;
 jugador_t jugadorB;
 
-perro_t *game_perro_actual = NULL;
-
-perro_t perrolandia[44];
-
 int ultimo_cambio = MAX_SIN_CAMBIOS;
 
 void ASSERT_OR_ERROR(uint value, char* error_msg)

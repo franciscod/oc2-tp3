@@ -78,14 +78,22 @@ ISR 19
 global _isr32
 _isr32:
     pushad
+
     call fin_intr_pic1
 
-        push 0 ; FIXME perro actual
-        call game_atender_tick
-        add esp, 4
+    call sched_atender_tick
+
+    str cx
+    cmp ax, cx
+    je .fin
+
+        mov word [sched_tarea_selector], ax
+        jmp far [sched_tarea_offset]
+
+    .fin:
 
     popad
-    iret
+iret
 ;;
 ;; Rutina de atención del TECLADO
 ;; -------------------------------------------------------------------------- ;;
@@ -109,7 +117,9 @@ _isr33:
 global _isr70
 _isr70:
     pushad
-    call fin_intr_pic1
+        pushad
+            call fin_intr_pic1
+        popad
 
         push ecx
         push eax

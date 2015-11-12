@@ -6,9 +6,10 @@
 
 
 // realiza inicialización básica de un perro. El perro aun no está vivo ni por lanzarse. Setea jugador, indice, etc
+
 void game_perro_inicializar(perro_t *perro, jugador_t *j, uint index, uint id)
 {
-	perro->id   = id;
+	perro->id   = id; // el de la GDT
     perro->index = index;
     perro->jugador = j;
 	perro->libre = TRUE;
@@ -83,6 +84,9 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 
     perro->x = nuevo_x;
     perro->y = nuevo_y;
+
+	screen_actualizar_posicion_mapa(viejo_x, viejo_y);
+	screen_actualizar_posicion_mapa(nuevo_x, nuevo_y);
 
     mmu_mover_perro(perro, viejo_x, viejo_y);
 
