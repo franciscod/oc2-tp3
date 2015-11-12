@@ -183,7 +183,8 @@ _isr33:
 ;; -------------------------------------------------------------------------- ;;
 global _isr70
 _isr70:
-    pushad
+    push 0x42424242 ; le hace lugarcito al ret value
+    pushad ; pushea 32bytes
         push ecx
         push eax
         call fin_intr_pic1
@@ -191,7 +192,11 @@ _isr70:
         call game_syscall_manejar
         add esp, 8
 
-        jmp GDT_SELECTOR_TSS_IDLE:0
+        mov dword [esp + 32], eax ; entierra el ret value despues del pushad
 
-    popad
-    iret
+        jmp GDT_SELECTOR_TSS_IDLE:0 ; idlea un toque
+        ;...vuelve del idle
+
+    popad ; levanta 32 bytes
+    pop eax ; levanta el ret value
+    iret ; y se lo devuelve a la tarea

@@ -130,9 +130,6 @@ uint game_perro_cavar(perro_t *perro)
 // *** viene del syscall olfatear ***
 uint game_perro_olfatear(perro_t *perro)
 {
-	// TODO Olfatear. El tercer caso del syscall le permite a una tarea perro conocer la dirección
-	// del hueso más cercano (es decir, izquierda, derecha, arriba o abajo).
-
 	int x_actual_diff = 1000, y_actual_diff = 1000;
 
 
