@@ -15,9 +15,7 @@
 // inicioTSSs
 tss tss_inicial;
 tss tss_idle;
-tss tss_perrito;
-tss tss_jugadorA[MAX_CANT_PERROS_VIVOS];
-tss tss_jugadorB[MAX_CANT_PERROS_VIVOS];
+tss tss_perro[MAX_CANT_PERROS_VIVOS * 2];
 
 void tss_inicializar() {
   // cargamos fruta en la tarea inicial para poder verlo con bochs
@@ -39,6 +37,10 @@ void tss_inicializar() {
 
   cargar_tss_en_gdt(&tss_inicial, &gdt[GDT_IDX_TSS_INICIAL]);
   cargar_tss_en_gdt(&tss_idle, &gdt[GDT_IDX_TSS_IDLE]);
+
+  for (int i=0; i<MAX_CANT_PERROS_VIVOS * 2; i++) {
+    cargar_tss_en_gdt(&tss_perro[i], &gdt[GDT_IDX_TSS_PERRO_START+i]);
+  }
 }
 
 

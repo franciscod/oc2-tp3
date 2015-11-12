@@ -26,7 +26,7 @@ void ASSERT_OR_ERROR(uint value, char* error_msg)
 {
 	if (!value) {
 		print(error_msg, 5, 5, C_BG_LIGHT_GREY | C_FG_BLACK);
-		breakpoint();
+		breakpoint(); //assert or error
 	}
 }
 
@@ -85,7 +85,7 @@ perro_t* game_perro_en_posicion(uint x, uint y)
 
 
 
-// termina si se agotaron los huesos o si hace tiempo que no hay ningun cambio
+// TODO termina si se agotaron los huesos o si hace tiempo que no hay ningun cambio
 void game_terminar_si_es_hora()
 {
 }

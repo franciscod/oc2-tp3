@@ -57,6 +57,6 @@ typedef struct str_tss {
 
 void tss_inicializar();
 void completar_tss(tss* entrada_tss, unsigned short cs, unsigned short ds, uint esp, uint eip, uint eeflags, uint cr3, unsigned short ss0, uint esp0); // algo mas?
-void cargar_tss_en_gdt(tss* entrada_tss, gdt_entry* entrada_gdt); // algo mas?
-
+void cargar_tss_en_gdt(tss* entrada_tss, gdt_entry* entrada_gdt);
+void completar_tss_tarea(tss* entrada_tss, perro_t *perro, int index_jugador, int index_tipo);
 #endif  /* !__TSS_H__ */

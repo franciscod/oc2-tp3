@@ -12,9 +12,11 @@ definicion de funciones del scheduler
 
 sched_t scheduler;
 
+#define NO_CURRENT ((unsigned short) -1)
+
 void sched_inicializar()
 {
-    scheduler.current = NULL;
+    scheduler.current = NO_CURRENT;
     for (int i = 0; i<MAX_CANT_TAREAS_VIVAS; i++) {
         sched_task_t *t = &scheduler.tasks[i];
         t->gdt_index = NULL;
@@ -39,6 +41,7 @@ int sched_buscar_tarea_libre()
 
 perro_t* sched_tarea_actual()
 {
+    if (scheduler.current == NO_CURRENT) return NULL;
     return scheduler.tasks[scheduler.current].perro;
 }
 
@@ -59,13 +62,21 @@ void sched_remover_tarea(unsigned int gdt_index)
 
 uint sched_proxima_a_ejecutar()
 {
-    int i = scheduler.current + 1;
+    int i_final = scheduler.current;
+    int i = i_final + 1;
+
+    if (scheduler.current == NO_CURRENT) {
+        i = 0;
+        i_final = MAX_CANT_TAREAS_VIVAS-1;
+    }
+
     jugador_t *j = sched_tarea_actual()->jugador;
 
     // busca una del jugador opuesto
-    while (i != scheduler.current) {
+    while (i != i_final) {
         if (scheduler.tasks[i].gdt_index != NULL) {
             if (scheduler.tasks[i].perro->jugador != j) {
+                scheduler.current = i;
                 return scheduler.tasks[i].gdt_index << 3 | 3;
             }
         }
@@ -74,9 +85,10 @@ uint sched_proxima_a_ejecutar()
     }
 
     // busca una del mismo jugador
-    while (i != scheduler.current) {
+    while (i != i_final) {
         if (scheduler.tasks[i].gdt_index != NULL) {
             if (scheduler.tasks[i].perro->jugador == j) {
+                scheduler.current = i;
                 return scheduler.tasks[i].gdt_index << 3 | 3;
             }
         }
@@ -85,8 +97,8 @@ uint sched_proxima_a_ejecutar()
         i %= MAX_CANT_TAREAS_VIVAS;
     }
 
-
-    return GDT_IDX_TSS_IDLE << 3 | 0; // esto se alcanzaria si no hay tareas
+    scheduler.current = NO_CURRENT;
+    return GDT_IDX_TSS_IDLE << 3 | 0; // esto se alcanzaria si no hay tareas corriendo
 }
 
 
@@ -94,5 +106,6 @@ ushort sched_atender_tick()
 {
     game_atender_tick(sched_tarea_actual());
 
-    return sched_proxima_a_ejecutar();
+    ushort prox = sched_proxima_a_ejecutar();
+    return prox;
 }

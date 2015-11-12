@@ -4,6 +4,7 @@
 #include "screen.h"
 #include "tss.h"
 
+extern tss tss_perro[MAX_CANT_PERROS_VIVOS * 2];
 
 // realiza inicialización básica de un perro. El perro aun no está vivo ni por lanzarse. Setea jugador, indice, etc
 
@@ -29,11 +30,13 @@ void game_perro_reciclar_y_lanzar(perro_t *perro, uint tipo)
 	perro->tipo = tipo;
 	perro->libre = FALSE;
 
-	// ahora debo llamar a rutinas que inicialicen un nuevo mapa de
-	// memoria para el nuevo perro, que carguen su tss correspondiente,
-	// lo scheduleen y finalmente lo pinten en pantalla
+	int tss_idx = j->index * MAX_CANT_PERROS_VIVOS + perro->index;
+	completar_tss_tarea(&tss_perro[tss_idx], perro,  j->index, tipo);
+	
+	sched_agregar_tarea(perro);
 
-	// ~~~ completar ~~~
+	screen_pintar_perro(perro);
+	screen_pintar_reloj_perro(perro);
 
 }
 
@@ -41,6 +44,7 @@ void game_perro_reciclar_y_lanzar(perro_t *perro, uint tipo)
 void game_perro_termino(perro_t *perro)
 {
 //	~~~ completar ~~~
+perro->libre = TRUE;
 }
 
 // transforma código de dirección en valores x e y
@@ -79,6 +83,10 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 
 	int nuevo_x = perro->x + x;
 	int nuevo_y = perro->y + y;
+
+	if (!(nuevo_x < MAPA_ANCHO && nuevo_x >= 0)) return 0;
+	if (!(nuevo_y < MAPA_ALTO && nuevo_y >= 0)) return 0;
+
     int viejo_x = perro->x;
     int viejo_y = perro->y;
 
@@ -86,12 +94,11 @@ uint game_perro_mover(perro_t *perro, direccion dir)
     perro->y = nuevo_y;
 
 	screen_actualizar_posicion_mapa(viejo_x, viejo_y);
-	screen_actualizar_posicion_mapa(nuevo_x, nuevo_y);
+	screen_pintar_perro(perro);
 
     mmu_mover_perro(perro, viejo_x, viejo_y);
 
-    // ~~~ completar ~~~
-    return nuevo_x + nuevo_y + viejo_x + viejo_y + res; // uso todas las variables para que no tire warning->error.
+    return 0;
 }
 
 // recibe un perro, el cual debe cavar en su posición

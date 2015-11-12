@@ -61,15 +61,6 @@ perro_t* game_jugador_dame_perro_libre(jugador_t *j)
 // debe encargarse de buscar un perro libre, configurarlo, y inicializar su mapeo de memoria, tss, y lugar en el sched
 void game_jugador_lanzar_perro(jugador_t *j, uint tipo, int x, int y)
 {
-	/*
-	Deberá realizar varias acciones: inicializar el mapeo de memoria del perro, copiar el código
-desde el kernel al mapa (en la posición de la cucha), inicializar el stack y una tss para
-finalmente agregar la tarea al scheduler. Si ya hay un perro en la cucha, la acción de lanzar
-un nuevo perro no tendrá ningún efecto. La tarea recibe como argumentos la dirección de
-salida (x,y).
-*/
-
-
 	if (game_perro_en_posicion(x,y) != NULL)
 		return;
 
@@ -79,8 +70,6 @@ salida (x,y).
 		return;
 
 	game_perro_reciclar_y_lanzar(perro, tipo);
-
-	mmu_inicializar_memoria_perro(perro, 0, 0); // ?
 }
 
 // recibe un par (x, y) y un jugador, al cual debe mover en esa dirección

@@ -18,8 +18,8 @@ extern fin_intr_pic1
 extern sched_atender_tick
 extern sched_tarea_actual
 
-interrupcion_desconocida_cuelgue_msg db     'INTERRUPCION DESCONOCIDA, KCSHO, ME CUELGO'
-interrupcion_desconocida_cuelgue_len equ    $ - interrupcion_desconocida_cuelgue_msg
+excepcion_cpu_msg db     'EXCEPCION DEL CPU! ME CUELGO'
+excepcion_cpu_len equ    $ - excepcion_cpu_msg
 
 extern screen_actualizar_reloj_global
 extern print_hex
@@ -38,7 +38,8 @@ _isr%1:
     ; Modificar las rutinas de excepciones del procesador para que desalojen a la tarea que
     ; estaba corriendo y corran la proxima (reemplazar con la idle?)
 
-    imprimir_texto_mp interrupcion_desconocida_cuelgue_msg, interrupcion_desconocida_cuelgue_len, 0x07, 8, 8
+    imprimir_texto_mp excepcion_cpu_msg, excepcion_cpu_len, 0x07, 8, 8
+
     jmp $
 
 %endmacro
@@ -88,6 +89,7 @@ _isr32:
     je .fin
 
         mov word [sched_tarea_selector], ax
+        xchg bx, bx
         jmp far [sched_tarea_offset]
 
     .fin:
