@@ -11,7 +11,7 @@
 #include "i386.h"
 
 
-void ir_hacia_desde(char x_dest, char y_dest, char x_actual, char y_actual);
+void ir_hacia_desde(char x_dest, char y_dest, int *x_actual, int *y_actual);
 void actualizar(int *x, int *y, int direccion);
 
 
@@ -39,7 +39,10 @@ void task(int x_origen, int y_origen) {
 	{}
 
 
-	ir_hacia_desde(x_origen, y_origen, x_actual, y_actual);
+	ir_hacia_desde(0, y_actual, &x_actual, &y_actual);
+	ir_hacia_desde(0, 0, &x_actual, &y_actual);
+	ir_hacia_desde(x_origen, 0, &x_actual, &y_actual);
+	ir_hacia_desde(x_origen, y_origen, &x_actual, &y_actual);
 
     while(1) { __asm __volatile("mov $2, %%eax":::"eax"); }
 }
@@ -55,19 +58,24 @@ void actualizar(int *x, int *y, int direccion)
 	}
 }
 
-void ir_hacia_desde(char x_dest, char y_dest, char x_actual, char y_actual)
+void ir_hacia_desde(char x_dest, char y_dest, int * x_actual, int * y_actual)
 {
-	char dir_h = x_dest > x_actual ? DER : IZQ;
-	char dir_v = y_dest > y_actual ? ABA : ARR;
+	char dir_h = x_dest > *x_actual ? DER : IZQ;
+	char dir_v = y_dest > *y_actual ? ABA : ARR;
 
-	int dist_x = x_dest > x_actual ? x_dest - x_actual : x_actual - x_dest;
-	int dist_y = y_dest > y_actual ? y_dest - y_actual : y_actual - y_dest;
+	int dist_x = x_dest > *x_actual ? x_dest - *x_actual : *x_actual - x_dest;
+	int dist_y = y_dest > *y_actual ? y_dest - *y_actual : *y_actual - y_dest;
 
 	int i = 0;
-	for (i = dist_x; i>0; i--)
+	for (i = dist_x; i>0; i--) {
+		actualizar(x_actual, y_actual, (int)dir_h);
 		syscall_moverse(dir_h);
+	}
 
-	for (i = dist_y; i>0; i--)
+	for (i = dist_y; i>0; i--) {
+		actualizar(x_actual, y_actual, (int)dir_v);
 		syscall_moverse(dir_v);
+	}
+
 
 }
