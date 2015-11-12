@@ -109,7 +109,7 @@ void game_atender_teclado(unsigned char tecla)
 		case KB_m: game_jugador_dar_orden(&jugadorB, 3); break;
 
 		default: break;
-		// TODO: debuguear
+		// TODO: debugger
 		//Implementar el mecanismo de debugging explicado en la sección 4.8 que indicará en pan-
 		//talla la razón del desalojo de una tarea.
 	}
