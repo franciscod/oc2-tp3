@@ -11,6 +11,8 @@ BITS 32
 sched_tarea_offset:     dd 0x00
 sched_tarea_selector:   dw 0x00
 
+GDT_SELECTOR_TSS_IDLE        equ 112 ; 8x14
+
 ;; PIC
 extern fin_intr_pic1
 
@@ -163,10 +165,14 @@ _isr33:
 
         xor eax, eax
         in al, 0x60
+        test al, 10000000b
+        jnz .fin
 
         push eax
         call game_atender_teclado
         add esp, 4
+
+    .fin:
 
     popad
     iret
@@ -176,14 +182,14 @@ _isr33:
 global _isr70
 _isr70:
     pushad
-        pushad
-            call fin_intr_pic1
-        popad
-
         push ecx
         push eax
+        call fin_intr_pic1
+
         call game_syscall_manejar
         add esp, 8
+
+        jmp GDT_SELECTOR_TSS_IDLE:0
 
     popad
     iret

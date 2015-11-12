@@ -176,7 +176,7 @@ uint mmu_xy2virtual(uint x, uint y) {
 
 
 void mmu_mover_perro(perro_t *perro, int viejo_x, int viejo_y) {
-	
+
 	jugador_t *j = perro->jugador;
 	int tss_idx = j->index * MAX_CANT_PERROS_VIVOS + perro->index;
 
@@ -186,6 +186,7 @@ void mmu_mover_perro(perro_t *perro, int viejo_x, int viejo_y) {
 	uint fisica_codigo_dst  = mmu_xy2fisica(perro->x, perro->y);
 	uint virtual_codigo_dst = mmu_xy2virtual(perro->x, perro->y);
 
+	mmu_mapear_pagina(ADDR_VIRTUAL_CODIGO, directorio_perro	, fisica_codigo_dst, ATTRS_TABLA_RW_U);
 	mmu_mapear_pagina(virtual_codigo_dst, directorio_perro, fisica_codigo_dst, ATTRS_TABLA_RW_U);
 	mmu_copiar_pagina(virtual_codigo_src, virtual_codigo_dst);
 }

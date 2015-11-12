@@ -31,12 +31,7 @@ uint game_syscall_manejar(uint syscall, uint param1) // eax, ecx
 
 		default: break;
 	}
-	/* TODO que implemente los servicios según se indica en la sección 4.4.
 
-	Por último, es fundamental tener en cuenta que una vez llamado el servicio, el scheduler
-	se encargará de desalojar a la tarea que lo llamó para dar paso a la próxima tarea. Este
-	mecanismo será detallado mas adelante.
-*/
     return 0;
 }
 
