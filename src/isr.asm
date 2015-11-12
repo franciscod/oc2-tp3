@@ -19,6 +19,7 @@ extern fin_intr_pic1
 ;; Sched
 extern sched_atender_tick
 extern sched_tarea_actual
+extern sched_desalojame_esta
 
 excepcion_cpu_0_msg db 'Excepcion 0 -- me cuelgo'
 excepcion_cpu_0_len equ $ - excepcion_cpu_0_msg
@@ -94,14 +95,15 @@ global _isr%1
 
 _isr%1:
     mov eax, %1
-    ; TODO
-    ; Modificar las rutinas de excepciones del procesador para que desalojen a la tarea que
-    ; estaba corriendo y corran la proxima (reemplazar con la idle?)
 
-    imprimir_texto_mp excepcion_cpu_%1_msg, excepcion_cpu_%1_len, 0x07, 8, 8
+    ;TODO debugger
 
-    jmp $
+    call sched_desalojame_esta
+    jmp GDT_SELECTOR_TSS_IDLE:0
 
+    ;imprimir_texto_mp excepcion_cpu_%1_msg, excepcion_cpu_%1_len, 0x07, 8, 8
+    ;jmp $
+    
 %endmacro
 
 ;;

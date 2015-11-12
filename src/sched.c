@@ -59,6 +59,13 @@ void sched_remover_tarea(unsigned int gdt_index)
     scheduler.tasks[i].perro = NULL;
 }
 
+void sched_desalojame_esta()
+{
+    game_perro_termino(scheduler.tasks[scheduler.current].perro);
+    scheduler.tasks[scheduler.current].perro = NULL;
+    scheduler.tasks[scheduler.current].gdt_index = NULL;
+}
+
 
 uint sched_proxima_a_ejecutar()
 {
