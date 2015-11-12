@@ -29,7 +29,7 @@ STACK_BASE equ 0x27000 ; 5.1.b enunciado
 PAGE_DIRECTORY      equ STACK_BASE ; pag 11 enunciado
 SET_PAGING_MASK     equ 0x80000000
 
-extern screen_inicializar, screen_pintar_puntajes
+extern screen_inicializar, screen_pintar_puntajes, screen_pintar_jugador
 extern game_jugador_inicializar, jugadorA, jugadorB
 extern idt_inicializar
 extern mmu_inicializar, mmu_inicializar_dir_kernel, mmu_unmapear_pagina
@@ -128,6 +128,14 @@ altosalto:
     ; Inicializar pantalla
     call screen_inicializar
     call screen_pintar_puntajes
+
+    push jugadorA
+    call screen_pintar_jugador
+    add esp, 4
+
+    push jugadorB
+    call screen_pintar_jugador
+    add esp, 4
 
     ; Inicializar el manejador de memoria
     call mmu_inicializar

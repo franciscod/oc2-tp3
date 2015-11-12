@@ -3,7 +3,6 @@
 #include "mmu.h"
 #include "screen.h"
 
-
 #define POS_INIT_A_X                      1
 #define POS_INIT_A_Y                      1
 #define POS_INIT_B_X         MAPA_ANCHO - 2
@@ -74,8 +73,15 @@ uint game_jugador_moverse(jugador_t *j, int x, int y)
 	int nuevo_x = j->x + x;
 	int nuevo_y = j->y + y;
 
-    // ~~~ completar ~~~
-    return nuevo_x + nuevo_y; // uso todas las variables locales para que no tire warning -> error
+	if (!(nuevo_x < MAPA_ANCHO && nuevo_x >= 0)) return 0;
+	if (!(nuevo_y < MAPA_ALTO && nuevo_y >= 0)) return 0;
+
+	screen_borrar_jugador(j);
+	j->x = nuevo_x;
+	j->y = nuevo_y;
+	screen_pintar_jugador(j);
+
+    return 0;
 }
 
 // descarga 1 hueso en la cucha y actualiza el screen
@@ -95,8 +101,5 @@ void game_jugador_anotar_punto(jugador_t *j)
 // guarda la orden en el jugador para que los perros puedan preguntarla luego (mediante un syscall)
 void game_jugador_dar_orden(jugador_t *jugador, int orden)
 {
-	
+
 }
-
-
-
