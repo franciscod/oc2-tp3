@@ -28,6 +28,10 @@ void game_jugador_inicializar(jugador_t *j)
 	j->x_cucha = j->x;
 	j->y_cucha = j->y;
 
+	j->orden_id = 0;
+	j->orden_x = -1;
+	j->orden_y = -1;
+
 
 	int i;
 	for (i = 0; i < MAX_CANT_PERROS_VIVOS; i++)
@@ -99,7 +103,9 @@ void game_jugador_anotar_punto(jugador_t *j)
 
 
 // guarda la orden en el jugador para que los perros puedan preguntarla luego (mediante un syscall)
-void game_jugador_dar_orden(jugador_t *jugador, int orden)
+void game_jugador_dar_orden(jugador_t *j, int orden)
 {
-
+	j->orden_id = orden;
+	j->orden_x = j->x;
+	j->orden_y = j->y;
 }

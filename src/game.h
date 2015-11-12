@@ -62,6 +62,8 @@ typedef struct jugador_t
 
     // posicion, puntos, ordenes, etc.
 	// completar si es necesario.
+    int orden_id, orden_x, orden_y;
+
 	int x, y;  // posicion
     uint puntos;
 

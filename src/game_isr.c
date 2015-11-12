@@ -126,13 +126,13 @@ void game_atender_teclado(unsigned char tecla)
 		case KB_j: game_jugador_moverse(&jugadorB, -1,  0); break;
 		case KB_l: game_jugador_moverse(&jugadorB, 1,  0); break;
 
-		case KB_z: game_jugador_dar_orden(&jugadorA, 0); break;
-		case KB_x: game_jugador_dar_orden(&jugadorA, 1); break;
-		case KB_c: game_jugador_dar_orden(&jugadorA, 2); break;
+		case KB_z: game_jugador_dar_orden(&jugadorA, 1); break;
+		case KB_x: game_jugador_dar_orden(&jugadorA, 2); break;
+		case KB_c: game_jugador_dar_orden(&jugadorA, 3); break;
 
-		case KB_b: game_jugador_dar_orden(&jugadorB, 0); break;
-		case KB_n: game_jugador_dar_orden(&jugadorB, 1); break;
-		case KB_m: game_jugador_dar_orden(&jugadorB, 2); break;
+		case KB_b: game_jugador_dar_orden(&jugadorB, 1); break;
+		case KB_n: game_jugador_dar_orden(&jugadorB, 2); break;
+		case KB_m: game_jugador_dar_orden(&jugadorB, 3); break;
 
 		default: break;
 		// TODO: debuguear
