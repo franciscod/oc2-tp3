@@ -143,5 +143,15 @@ ushort sched_atender_tick()
     game_atender_tick(sched_tarea_actual());
 
     ushort prox = sched_proxima_a_ejecutar();
+    /*
+    // indicadores de que tarea se va a ejecutar
+    if (prox!=0x70) {
+        print_hex(0, 8, 25 + 0, 0, 0x2F);
+        print_hex(0, 8, 25 + 8, 0, 0x2F);
+        print_hex(1, 1, 25 + (prox-0x78)/8, 0, 0x2F);
+    }
+    // indice en la gdt de la tarea
+    print_hex(prox >> 3, 4, 20, 0, 0x1c);
+    */
     return prox;
 }
