@@ -11,6 +11,14 @@ definicion de funciones del scheduler
 #define POSICION_RELOJES_F   46
 #define POSICION_RELOJES_C_A 4
 #define POSICION_RELOJES_C_B 60
+
+#define POSICION_CUADRO_DEBUG_X 10
+#define POSICION_CUADRO_DEBUG_Y 10
+#define ANCHO_CUADRO_DEBUG      50
+#define ALTO_CUADRO_DEBUG       30
+#define ALTO_BANDA_DEBUG        2
+
+
 extern int ultimo_cambio;
 
 extern jugador_t jugadorA, jugadorB;
@@ -279,4 +287,11 @@ void screen_stop_game_show_winner(jugador_t *j) {
     // a partir de aca se termina el unviverso (STOP GAME)
     __asm __volatile( "cli\n" : : : );
     while(1){}
+}
+
+void screen_pintar_info_debug(){
+    screen_pintar_rect(' ', C_BG_BLACK, POSICION_CUADRO_DEBUG_X, POSICION_CUADRO_DEBUG_Y, ALTO_CUADRO_DEBUG, ANCHO_CUADRO_DEBUG);
+    screen_pintar_rect(' ', C_BG_RED, POSICION_CUADRO_DEBUG_X + 1, POSICION_CUADRO_DEBUG_Y + 1, ALTO_BANDA_DEBUG, ANCHO_CUADRO_DEBUG - 2);
+    print("eax", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 2, C_BG_BLACK | C_FG_WHITE);
+
 }

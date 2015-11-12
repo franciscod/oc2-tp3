@@ -80,6 +80,7 @@ void game_atender_tick(perro_t *perro)
 
 #define KB_y        0x15 // TODO debugger
 
+unsigned char debugging_mode = 0;
 
 // ~~~ debe atender la interrupción de teclado, se le pasa la tecla presionada
 void game_atender_teclado(unsigned char tecla)
@@ -114,10 +115,16 @@ void game_atender_teclado(unsigned char tecla)
 		case KB_n: game_jugador_dar_orden(&jugadorB, 2); break;
 		case KB_m: game_jugador_dar_orden(&jugadorB, 3); break;
 
-		default: break;
-		// TODO: debugger
+		// TODO: debuguear
 		//Implementar el mecanismo de debugging explicado en la sección 4.8 que indicará en pan-
 		//talla la razón del desalojo de una tarea.
+		case KB_y: 
+			// screen_pintar_rect(debugging_mode, 0, 10, 10, 17, 40); 
+			debugging_mode = 1;
+			// screen_pintar_info_debug();
+			break;
+
+		default: break;
 	}
 
 }

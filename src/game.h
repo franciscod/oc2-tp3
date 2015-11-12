@@ -12,7 +12,7 @@
 
 #define MAX_CANT_PERROS_VIVOS             8
 #define ESCONDITES_CANTIDAD               8
-#define MAX_SIN_CAMBIOS                 300
+#define MAX_SIN_CAMBIOS                 999
 
 
 #define JUGADOR_A                         0

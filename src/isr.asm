@@ -82,10 +82,11 @@ excepcion_cpu_19_msg db 'Excepcion 19 -- me cuelgo'
 excepcion_cpu_19_len equ $ - excepcion_cpu_19_msg
 
 
-extern screen_actualizar_reloj_global
+extern screen_actualizar_reloj_global, screen_pintar_info_debug
 extern print_hex
-;;
+
 extern game_atender_tick, game_atender_teclado, game_syscall_manejar
+extern debugging_mode
 
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
@@ -97,6 +98,28 @@ _isr%1:
     mov eax, %1
 
     ;TODO debugger
+    ; Veo si esta el modo debugging activo
+    ; Si esta tengo que mostrar el estado del perro destruido (¿TSS?)
+    ; El juego se detiene hasta la proxima pulsacion de 'y'
+    ; (¿Como hago para dejarlo detenido y que sea capaz de atrapar las interrupciones de teclado?)
+    ; (Una vez que haya mostrado en pantalla deberia de alguna forma proseguir con el desalojo de la tarea?)
+    ; Una vez que repulse 'y' se espera hasta el proximo ciclo de reloj para decidir la proxima tarea a ejecutar
+    ; Se sigue en modo debuggeo para siempre
+    ; mov dword edx, [debugging_mode]
+    ; cmp edx, 0
+
+    cmp byte [debugging_mode], 0
+    je .desaloja
+
+    call screen_pintar_info_debug
+
+    mov byte [debugging_mode], 0    ; Cuando vuelva a tocar la y vuelve a poner el flag en 1
+
+    .paused:
+    cmp byte [debugging_mode], 0
+    je .paused
+
+    .desaloja:
 
     call sched_desalojame_esta
     jmp GDT_SELECTOR_TSS_IDLE:0
