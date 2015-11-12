@@ -15,8 +15,6 @@ void game_perro_inicializar(perro_t *perro, jugador_t *j, uint index, uint id)
     perro->jugador = j;
 	perro->libre = TRUE;
 
-//	~~~ completar si es necesario ~~~
-
 }
 
 // toma un perro ya existente libre y lo recicla seteando x e y a la cucha.

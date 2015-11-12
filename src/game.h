@@ -12,7 +12,7 @@
 
 #define MAX_CANT_PERROS_VIVOS             8
 #define ESCONDITES_CANTIDAD               8
-#define MAX_SIN_CAMBIOS                 999
+#define MAX_SIN_CAMBIOS                 300
 
 
 #define JUGADOR_A                         0
@@ -59,7 +59,6 @@ typedef struct jugador_t
     uint x_cucha, y_cucha;
 
     // posicion, puntos, ordenes, etc.
-	// completar si es necesario.
     int orden_id, orden_x, orden_y;
 
 	int x, y;  // posicion

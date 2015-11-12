@@ -121,11 +121,11 @@ gdt_entry gdt[GDT_COUNT] = {
     },
 
     [GDT_IDX_TSS_IDLE] = (gdt_entry) {
-      // a completar una vez
+      // se llena estaticamente
     },
 
     [GDT_IDX_TSS_PERRO_START ... GDT_IDX_TSS_PERRO_END] = (gdt_entry) {
-      // a completar dinamicamente
+      // se llenan estaticamente, biyeccion con perro y con tss
     }
 
 

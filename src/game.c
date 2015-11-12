@@ -85,7 +85,38 @@ perro_t* game_perro_en_posicion(uint x, uint y)
 
 
 
-// TODO termina si se agotaron los huesos o si hace tiempo que no hay ningun cambio
 void game_terminar_si_es_hora()
 {
+
+	int termina = 0;
+	int quedanhuesos = 0;
+
+	int ancho_barrita = (ultimo_cambio+1)* 40/MAX_SIN_CAMBIOS ;
+	screen_pintar_rect(' ', 0x00, 0, 38, 1, 40-ancho_barrita);
+	screen_pintar_rect('#', 0x03, 0, 38 + 40-ancho_barrita, 1, ancho_barrita);
+	ultimo_cambio--;
+
+	if (ultimo_cambio <= 0) {
+		termina |= 1;
+	}
+
+    for (int i = 0; i < ESCONDITES_CANTIDAD; i++)
+	{
+		if (escondites[i][2] > 0) {
+			quedanhuesos = 1;
+			break;
+		};
+	}
+
+	if (!quedanhuesos) termina |= 1;
+
+
+	if (!termina) return;
+
+	if (jugadorA.puntos > jugadorB.puntos)
+		screen_stop_game_show_winner(&jugadorA);
+	else
+		screen_stop_game_show_winner(&jugadorB); // empates -> gana B
+
+
 }
