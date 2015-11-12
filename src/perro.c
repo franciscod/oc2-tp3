@@ -66,17 +66,6 @@ uint game_dir2xy(/* in */ direccion dir, /* out */ int *x, /* out */ int *y)
 // *** viene del syscall mover ***
 uint game_perro_mover(perro_t *perro, direccion dir)
 {
-	// TODO
-	// 0x1 - Moverse. Recibe en ECX el código de dirección, que puede ser:
-	// 	 4, arriba
-	// 	 7, abajo
-	// 	10, derecha
-	// 	13, izquierda.
-	// Deberá copiar el código de la tarea a la nueva ubicación,
-	// siempre y cuando sea posible: debe chequearse que no se salga del mapa y que no haya
-	// una tarea del mismo jugador en el lugar destino. Deberá mapear la nueva posición del
-	// mapa a esa tarea.
-
 	int x, y;
 	uint res = game_dir2xy(dir, &x, &y);
 	if (res == -1) return 0;

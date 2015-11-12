@@ -147,7 +147,6 @@ _isr32:
     je .fin
 
         mov word [sched_tarea_selector], ax
-        ;xchg bx, bx
         jmp far [sched_tarea_offset]
 
     .fin:
