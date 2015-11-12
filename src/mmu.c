@@ -126,6 +126,10 @@ void mmu_inicializar() {
 // crea el directorio, las paginas, copia el codigo e inicializa el stack
 // el perro viene completo, tiene x y
 uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_tipo) {
+	uint directorio_actual = rcr3(); // guarda el cr3 actual
+	// carga temporalmente el directorio de paginas del kernel, para mapear las paginas del codigo del perro que se esta
+	// inicializando sin darle ventajas al perro que corre actualmente (cuando cayo la interrupcion de teclado)
+	lcr3(PAGE_DIRECTORY);
 
 	uint directorio_perro =  mmu_proxima_pagina_fisica_libre();
 	mmu_inicializar_pagina((uint*) directorio_perro);
@@ -154,6 +158,7 @@ uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_
 	virtual_codigo_dst_ptr[0x400 - 2] = perro->x;
 	virtual_codigo_dst_ptr[0x400 - 3] = TAREA_IDLE;
 
+	lcr3(directorio_actual);
 	return directorio_perro;
 }
 
