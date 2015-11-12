@@ -38,14 +38,14 @@ _isr%1:
 
     ; Veo si esta el modo debugging activo
     ; Si esta tengo que mostrar el estado del perro destruido (¿TSS?)
-    ; El juego se detiene hasta la proxima pulsacion de 'y' 
+    ; El juego se detiene hasta la proxima pulsacion de 'y'
     ; (¿Como hago para dejarlo detenido y que sea capaz de atrapar las interrupciones de teclado?)
     ; (Una vez que haya mostrado en pantalla deberia de alguna forma proseguir con el desalojo de la tarea?)
     ; Una vez que repulse 'y' se espera hasta el proximo ciclo de reloj para decidir la proxima tarea a ejecutar
     ; Se sigue en modo debuggeo para siempre
-
-    ; cmp [debugging_mode], 1
-    ; je debug
+    mov dword edx, [debugging_mode]
+    cmp edx, 1
+    je debug
 
     ; TODO
     ; Modificar las rutinas de excepciones del procesador para que desalojen a la tarea que
@@ -132,6 +132,6 @@ _isr70:
     popad
     iret
 
-debug: 
-
+debug:
+    xchg bx, bx
     ; mostrar info del perro destruido
