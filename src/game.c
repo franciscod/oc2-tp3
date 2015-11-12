@@ -20,6 +20,7 @@ int escondites[ESCONDITES_CANTIDAD][3] = { // TRIPLAS DE LA FORMA (X, Y, HUESOS)
 jugador_t jugadorA;
 jugador_t jugadorB;
 
+extern unsigned char debugging_mode;
 int ultimo_cambio = MAX_SIN_CAMBIOS;
 
 void ASSERT_OR_ERROR(uint value, char* error_msg)
@@ -95,6 +96,9 @@ void game_terminar_si_es_hora()
 	screen_pintar_rect(' ', 0x00, 0, 38, 1, 40-ancho_barrita);
 	screen_pintar_rect('#', 0x03, 0, 38 + 40-ancho_barrita, 1, ancho_barrita);
 	ultimo_cambio--;
+
+
+    screen_pintar_rect(debugging_mode ? 'd' : ' ', C_BG_BLACK | C_FG_WHITE, 0, 36, 1, 1);
 
 	if (ultimo_cambio <= 0) {
 		termina |= 1;
