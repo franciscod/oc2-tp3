@@ -22,29 +22,27 @@ void wait(int pseudosecs);
 
 void task(int x_target, int y_target) {
     /* Tarea */
-	syscall_moverse(DER); wait(200);
-	syscall_moverse(DER); wait(200);
-	syscall_moverse(DER); wait(200);
-	syscall_moverse(DER); wait(200);
-	syscall_moverse(DER); wait(200);
-	syscall_moverse(DER); wait(200);
+	syscall_moverse(DER);wait(100);
+	syscall_moverse(DER);wait(100);
+	syscall_moverse(DER);wait(100);
+	syscall_moverse(DER);wait(100);
+	syscall_moverse(DER);wait(100);
+	syscall_moverse(DER);wait(100);
 
-	while(TRUE) {
-		syscall_moverse(DER); wait(200);
-		syscall_moverse(DER); wait(200);
-		syscall_moverse(DER); wait(200);
-		syscall_moverse(ABA); wait(200);
-		syscall_moverse(ABA); wait(200);
-		syscall_moverse(ABA); wait(200);
-		syscall_moverse(IZQ); wait(200);
-		syscall_moverse(IZQ); wait(200);
-		syscall_moverse(IZQ); wait(200);
-		syscall_moverse(ARR); wait(200);
-		syscall_moverse(ARR); wait(200);
-		syscall_moverse(ARR); wait(200);
-	}
 
-  while(1) { __asm __volatile("mov $2, %%eax":::"eax"); }
+	syscall_moverse(DER);wait(100);
+	syscall_moverse(DER);wait(100);
+	syscall_moverse(DER);wait(100);
+	syscall_moverse(ABA);wait(100);
+	syscall_moverse(ABA);wait(100);
+	syscall_moverse(ABA);wait(100);
+	syscall_moverse(IZQ);wait(100);
+	syscall_moverse(IZQ);wait(100);
+	syscall_moverse(IZQ);wait(100);
+	syscall_moverse(ARR);wait(100);
+	syscall_moverse(ARR);wait(100);
+
+  while(1) { __asm __volatile("mov $4025344291, %%eax":::"eax"); }
 }
 
 

@@ -36,8 +36,8 @@ void game_jugador_inicializar(jugador_t *j)
 	int i;
 	for (i = 0; i < MAX_CANT_PERROS_VIVOS; i++)
 	{
-		uint gdt_index = GDT_IDX_TSS_PERRO_START;
-		game_perro_inicializar(&j->perros[i], j, i, gdt_index + i*8);
+		uint gdt_index = GDT_IDX_TSS_PERRO_START + j->index * MAX_CANT_PERROS_VIVOS;
+		game_perro_inicializar(&j->perros[i], j, i, gdt_index + i);
 	}
 
 }

@@ -87,6 +87,14 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 	if (!(nuevo_x < MAPA_ANCHO && nuevo_x >= 0)) return 0;
 	if (!(nuevo_y < MAPA_ALTO && nuevo_y >= 0)) return 0;
 
+	perro_t *perro_que_pisaria = game_perro_en_posicion(nuevo_x, nuevo_y);
+
+	if (perro_que_pisaria != NULL) {
+		if (perro_que_pisaria->jugador == perro->jugador) {
+			return 0;
+		}
+	}
+
     int viejo_x = perro->x;
     int viejo_y = perro->y;
 

@@ -62,11 +62,12 @@ void sched_remover_tarea(unsigned int gdt_index)
 
 uint sched_proxima_a_ejecutar()
 {
-    int i_final = scheduler.current;
+    int i_final = scheduler.current + 1;
 
     if (scheduler.current == NO_CURRENT) {
-        i_final = MAX_CANT_TAREAS_VIVAS-1;
+        i_final = 0;
     }
+    i_final %= MAX_CANT_TAREAS_VIVAS;;
     int i = i_final;
 
     jugador_t *j = sched_tarea_actual()->jugador;
