@@ -12,11 +12,11 @@ definicion de funciones del scheduler
 #define POSICION_RELOJES_C_A 4
 #define POSICION_RELOJES_C_B 60
 
-#define POSICION_CUADRO_DEBUG_X 10
-#define POSICION_CUADRO_DEBUG_Y 10
-#define ANCHO_CUADRO_DEBUG      50
-#define ALTO_CUADRO_DEBUG       30
-#define ALTO_BANDA_DEBUG        2
+#define POSICION_CUADRO_DEBUG_X 24
+#define POSICION_CUADRO_DEBUG_Y 6
+#define ANCHO_CUADRO_DEBUG      30
+#define ALTO_CUADRO_DEBUG       36
+#define ALTO_BANDA_DEBUG        1
 
 
 extern int ultimo_cambio;
@@ -289,9 +289,100 @@ void screen_stop_game_show_winner(jugador_t *j) {
     while(1){}
 }
 
-void screen_pintar_info_debug(){
-    screen_pintar_rect(' ', C_BG_BLACK, POSICION_CUADRO_DEBUG_X, POSICION_CUADRO_DEBUG_Y, ALTO_CUADRO_DEBUG, ANCHO_CUADRO_DEBUG);
-    screen_pintar_rect(' ', C_BG_RED, POSICION_CUADRO_DEBUG_X + 1, POSICION_CUADRO_DEBUG_Y + 1, ALTO_BANDA_DEBUG, ANCHO_CUADRO_DEBUG - 2);
-    print("eax", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 2, C_BG_BLACK | C_FG_WHITE);
+void screen_pintar_info_debug(uint eax,
+                              uint ebx,
+                              uint ecx,
+                              uint edx,
+                              uint esi,
+                              uint edi,
+                              uint ebp,
+                              uint esp,
+                              uint eip,
+                              uint cs,
+                              uint ds,
+                              uint fs,
+                              uint gs,
+                              uint ss,
+                              uint eflags,
+                              uint cr0,
+                              uint cr2,
+                              uint cr3,
+                              uint cr4,
+                              uint stack0,
+                              uint stack1,
+                              uint stack2,
+                              uint stack3,
+                              uint stack4){  
 
+    screen_pintar_rect(' ', C_BG_BLACK, POSICION_CUADRO_DEBUG_Y, POSICION_CUADRO_DEBUG_X, ALTO_CUADRO_DEBUG, ANCHO_CUADRO_DEBUG);
+    screen_pintar_rect(' ', C_BG_RED, POSICION_CUADRO_DEBUG_Y + 1, POSICION_CUADRO_DEBUG_X + 1, ALTO_BANDA_DEBUG, ANCHO_CUADRO_DEBUG - 2);
+    screen_pintar_rect(' ', C_BG_LIGHT_GREY, POSICION_CUADRO_DEBUG_Y + 1 + ALTO_BANDA_DEBUG, POSICION_CUADRO_DEBUG_X + 1, ALTO_CUADRO_DEBUG - ALTO_BANDA_DEBUG - 2, ANCHO_CUADRO_DEBUG - 2);
+    
+    print("eax", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 3, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(eax, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 3, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("ebx", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 5, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(ebx, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 5, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("ecx", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 7, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(ecx, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 7, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("edx", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 9, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(edx, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 9, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("esi", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 11, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(esi, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 11, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("edi", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 13, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(edi, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 13, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("ebp", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 15, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(ebp, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 15, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("esp", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 17, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(esp, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 17, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("eip", POSICION_CUADRO_DEBUG_X + 2, POSICION_CUADRO_DEBUG_Y + 19, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(eip, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 19, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+
+    print("cs", POSICION_CUADRO_DEBUG_X + 3, POSICION_CUADRO_DEBUG_Y + 21, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(cs, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 21, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("ds", POSICION_CUADRO_DEBUG_X + 3, POSICION_CUADRO_DEBUG_Y + 23, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(ds, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 23, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("fs", POSICION_CUADRO_DEBUG_X + 3, POSICION_CUADRO_DEBUG_Y + 25, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(fs, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 25, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("gs", POSICION_CUADRO_DEBUG_X + 3, POSICION_CUADRO_DEBUG_Y + 27, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(gs, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 27, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("ss", POSICION_CUADRO_DEBUG_X + 3, POSICION_CUADRO_DEBUG_Y + 29, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(ss, 8, POSICION_CUADRO_DEBUG_X + 6, POSICION_CUADRO_DEBUG_Y + 29, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    
+    print("eflags", POSICION_CUADRO_DEBUG_X + 3, POSICION_CUADRO_DEBUG_Y + 31, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(eflags, 8, POSICION_CUADRO_DEBUG_X + 10, POSICION_CUADRO_DEBUG_Y + 31, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+
+    print("cr0", POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 3, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(cr0, 8, POSICION_CUADRO_DEBUG_X + 20, POSICION_CUADRO_DEBUG_Y + 3, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("cr2", POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 5, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(cr2, 8, POSICION_CUADRO_DEBUG_X + 20, POSICION_CUADRO_DEBUG_Y + 5, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("cr3", POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 7, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(cr3, 8, POSICION_CUADRO_DEBUG_X + 20, POSICION_CUADRO_DEBUG_Y + 7, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+    print("cr4", POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 9, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(cr4, 8, POSICION_CUADRO_DEBUG_X + 20, POSICION_CUADRO_DEBUG_Y + 9, C_BG_LIGHT_GREY | C_FG_WHITE);
+
+
+    print("stack", POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 20, C_BG_LIGHT_GREY | C_FG_BLACK);
+    print_hex(stack0, 8, POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 23, C_BG_LIGHT_GREY | C_FG_WHITE);
+    print_hex(stack1, 8, POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 24, C_BG_LIGHT_GREY | C_FG_WHITE);
+    print_hex(stack2, 8, POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 25, C_BG_LIGHT_GREY | C_FG_WHITE);
+    print_hex(stack3, 8, POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 26, C_BG_LIGHT_GREY | C_FG_WHITE);
+    print_hex(stack4, 8, POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 27, C_BG_LIGHT_GREY | C_FG_WHITE);
 }
