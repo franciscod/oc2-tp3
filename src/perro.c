@@ -44,7 +44,7 @@ void game_perro_reciclar_y_lanzar(perro_t *perro, uint tipo)
 void game_perro_termino(perro_t *perro)
 {
 	perro->libre = TRUE;
-	
+
 	screen_borrar_perro(perro);
 	screen_pintar_reloj_perro(perro);
 
@@ -105,8 +105,7 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 // *** viene del syscall cavar ***
 uint game_perro_cavar(perro_t *perro)
 {
-	// TODO
-	// 0x2 - Cavar. En caso de estar sobre un escondite aumenta en 1 la cantidad de huesos del
+	// TODO Cavar. En caso de estar sobre un escondite aumenta en 1 la cantidad de huesos del
 	// perro y disminuye en 1 la cantidad de huesos del escondite. La cantidad de huesos en
 	// cada escondite están dados por una variable global llamada huesos en game.h. El perro
 	// puede llevar hasta 10 huesos, luego de eso el syscall debe ignorar el pedido.
@@ -119,8 +118,7 @@ uint game_perro_cavar(perro_t *perro)
 // *** viene del syscall olfatear ***
 uint game_perro_olfatear(perro_t *perro)
 {
-	// TODO
-	// 0x3 - Olfatear. El tercer caso del syscall le permite a una tarea perro conocer la dirección
+	// TODO Olfatear. El tercer caso del syscall le permite a una tarea perro conocer la dirección
 	// del hueso más cercano (es decir, izquierda, derecha, arriba o abajo).
 
 	int x_actual_diff = 1000, y_actual_diff = 1000;

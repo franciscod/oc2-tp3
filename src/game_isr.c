@@ -72,7 +72,7 @@ void game_atender_tick(perro_t *perro)
 #define KB_shiftL   0x2a // 0xaa
 #define KB_shiftR   0x36 // 0xb6
 
-#define KB_y        0x15 // debug mode TODO
+#define KB_y        0x15 // TODO debugger
 
 
 // ~~~ debe atender la interrupción de teclado, se le pasa la tecla presionada
