@@ -32,7 +32,7 @@ void game_perro_reciclar_y_lanzar(perro_t *perro, uint tipo)
 
 	int tss_idx = j->index * MAX_CANT_PERROS_VIVOS + perro->index;
 	completar_tss_tarea(&tss_perro[tss_idx], perro,  j->index, tipo);
-	
+
 	sched_agregar_tarea(perro);
 
 	screen_pintar_perro(perro);
@@ -90,9 +90,9 @@ uint game_perro_mover(perro_t *perro, direccion dir)
     int viejo_x = perro->x;
     int viejo_y = perro->y;
 
+	screen_borrar_perro(perro);
     perro->x = nuevo_x;
     perro->y = nuevo_y;
-
 	screen_actualizar_posicion_mapa(viejo_x, viejo_y);
 	screen_pintar_perro(perro);
 

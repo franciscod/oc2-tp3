@@ -8,6 +8,7 @@
 #include "mmu.h"
 #include "i386.h"
 #include "screen.h"
+#include "tss.h"
 
 
 #define ADDR_VIRTUAL_COMPARTIDA		0x400000
@@ -22,6 +23,7 @@
 /* Direcciones fisicas de directorios y tablas de paginas del KERNEL */
 /* -------------------------------------------------------------------------- */
 
+extern tss tss_perro[MAX_CANT_PERROS_VIVOS * 2];
 uint pag_compartida[2];
 
 uint prox_pag_libre = AREA_LIBRE_START;
@@ -172,7 +174,18 @@ uint mmu_xy2virtual(uint x, uint y) {
 	return MAPA_BASE_VIRTUAL + game_xy2lineal(x, y) * 0x1000;
 }
 
-// debe remapear y copiar el codigo TODO
+
 void mmu_mover_perro(perro_t *perro, int viejo_x, int viejo_y) {
 	
+	jugador_t *j = perro->jugador;
+	int tss_idx = j->index * MAX_CANT_PERROS_VIVOS + perro->index;
+
+	uint directorio_perro = tss_perro[tss_idx].cr3;
+
+	uint virtual_codigo_src = mmu_xy2virtual(viejo_x, viejo_y);
+	uint fisica_codigo_dst  = mmu_xy2fisica(perro->x, perro->y);
+	uint virtual_codigo_dst = mmu_xy2virtual(perro->x, perro->y);
+
+	mmu_mapear_pagina(virtual_codigo_dst, directorio_perro, fisica_codigo_dst, ATTRS_TABLA_RW_U);
+	mmu_copiar_pagina(virtual_codigo_src, virtual_codigo_dst);
 }

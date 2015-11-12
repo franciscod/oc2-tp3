@@ -18,12 +18,38 @@ typedef struct extra_t {
 
 } extra_t;
 
+void wait(int pseudosecs);
 
 void task(int x_target, int y_target) {
     /* Tarea */
+	syscall_moverse(DER); wait(200);
+	syscall_moverse(DER); wait(200);
+	syscall_moverse(DER); wait(200);
+	syscall_moverse(DER); wait(200);
+	syscall_moverse(DER); wait(200);
+	syscall_moverse(DER); wait(200);
+
 	while(TRUE) {
-		syscall_moverse(ARR);
+		syscall_moverse(DER); wait(200);
+		syscall_moverse(DER); wait(200);
+		syscall_moverse(DER); wait(200);
+		syscall_moverse(ABA); wait(200);
+		syscall_moverse(ABA); wait(200);
+		syscall_moverse(ABA); wait(200);
+		syscall_moverse(IZQ); wait(200);
+		syscall_moverse(IZQ); wait(200);
+		syscall_moverse(IZQ); wait(200);
+		syscall_moverse(ARR); wait(200);
+		syscall_moverse(ARR); wait(200);
+		syscall_moverse(ARR); wait(200);
 	}
 
   while(1) { __asm __volatile("mov $2, %%eax":::"eax"); }
+}
+
+
+void wait(int pseudoms)
+{
+	int count;
+	for (count = 0; count < pseudoms * 1000; count++) {}
 }

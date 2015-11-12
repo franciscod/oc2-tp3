@@ -77,7 +77,7 @@ uint sched_proxima_a_ejecutar()
         if (scheduler.tasks[i].gdt_index != NULL) {
             if (scheduler.tasks[i].perro->jugador != j) {
                 scheduler.current = i;
-                return scheduler.tasks[i].gdt_index << 3 | 3;
+                return scheduler.tasks[i].gdt_index << 3 | 0;
             }
         }
         i++;
@@ -89,7 +89,7 @@ uint sched_proxima_a_ejecutar()
         if (scheduler.tasks[i].gdt_index != NULL) {
             if (scheduler.tasks[i].perro->jugador == j) {
                 scheduler.current = i;
-                return scheduler.tasks[i].gdt_index << 3 | 3;
+                return scheduler.tasks[i].gdt_index << 3 | 0;
             }
         }
 

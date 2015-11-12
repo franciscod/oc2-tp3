@@ -202,7 +202,7 @@ void screen_pintar_perro(perro_t *perro)
 void screen_borrar_perro(perro_t *perro)
 {
     screen_pintar('.', C_BG_GREEN | C_FG_BLACK, perro->y+1, perro->x);
-    screen_actualizar_posicion_mapa(perro->x, perro->y);
+    //screen_actualizar_posicion_mapa(perro->x, perro->y);
 }
 
 void screen_pintar_jugador(jugador_t *j)
@@ -280,4 +280,3 @@ void screen_stop_game_show_winner(jugador_t *j) {
     __asm __volatile( "cli\n" : : : );
     while(1){}
 }
-

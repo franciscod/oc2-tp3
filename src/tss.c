@@ -122,7 +122,7 @@ void cargar_tss_en_gdt(tss* entrada_tss,
     entrada_gdt->type        = 0b1001;
     entrada_gdt->s           = 0b0;
     // trae los privilegios del segmento de codigo de la tss
-    entrada_gdt->dpl         = entrada_tss->cs & 0x03;
+    entrada_gdt->dpl         = 0;
     entrada_gdt->p           = 0b1;
     entrada_gdt->avl         = 1;
     entrada_gdt->l           = 0;

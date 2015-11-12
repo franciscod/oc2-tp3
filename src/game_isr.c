@@ -45,7 +45,8 @@ uint game_syscall_manejar(uint syscall, uint param1) // eax, ecx
 void game_atender_tick(perro_t *perro)
 {
 	screen_actualizar_reloj_global();
-	
+	if (perro != NULL) screen_actualizar_reloj_perro(perro);
+
 	/*
 	    ;TODO Modificar el código necesario para que se realice el intercambio de tareas por cada ciclo de
 	    ; reloj. El intercambio se realizará según indique la función sched_proxima_a_ejecutar().
