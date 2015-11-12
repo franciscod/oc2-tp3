@@ -18,13 +18,14 @@ extern fin_intr_pic1
 extern sched_atender_tick
 extern sched_tarea_actual
 
-
 interrupcion_desconocida_cuelgue_msg db     'INTERRUPCION DESCONOCIDA, KCSHO, ME CUELGO'
 interrupcion_desconocida_cuelgue_len equ    $ - interrupcion_desconocida_cuelgue_msg
 
 extern screen_actualizar_reloj_global
 extern print_hex
 ;;
+extern game_atender_tick, game_atender_teclado, game_syscall_manejar
+
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
 
@@ -33,6 +34,10 @@ global _isr%1
 
 _isr%1:
     mov eax, %1
+    ; TODO
+    ; Modificar las rutinas de excepciones del procesador para que desalojen a la tarea que
+    ; estaba corriendo y corran la proxima (reemplazar con la idle?)
+
     imprimir_texto_mp interrupcion_desconocida_cuelgue_msg, interrupcion_desconocida_cuelgue_len, 0x07, 8, 8
     jmp $
 
@@ -75,11 +80,9 @@ _isr32:
     pushad
     call fin_intr_pic1
 
-    call screen_actualizar_reloj_global
-    ;call sched_atender_tick
-    ;push eax
-    ;call game_atender_tick
-    ;add esr, 4
+        push 0 ; FIXME perro actual
+        call game_atender_tick
+        add esp, 4
 
     popad
     iret
@@ -91,24 +94,15 @@ _isr33:
     pushad
     call fin_intr_pic1
 
-    xor eax, eax
+        xor eax, eax
+        in al, 0x60
 
-    in al, 0x60
-    mov ebx, eax
-    and ebx, 0x80   ; esta presionandose?
-    jnz .chau
+        push eax
+        call game_atender_teclado
+        add esp, 4
 
-    push 0x17
-    push 0
-    push 78
-    push 2
-    push eax
-    call print_hex
-    add esp, 20
-
-    .chau:
-        popad
-        iret
+    popad
+    iret
 
 ;; Rutinas de atención de las SYSCALLS
 ;; -------------------------------------------------------------------------- ;;
@@ -117,28 +111,10 @@ _isr70:
     pushad
     call fin_intr_pic1
 
-    cmp eax, 0x1
-    jz .moverse
+        push ecx
+        push eax
+        call game_syscall_manejar
+        add esp, 8
 
-    cmp eax, 0x2
-    jz .cavar
-
-    cmp eax, 0x3
-    jz .olfatear
-
-    cmp eax, 0x4
-    jz .ordenes
-
-    jmp .fin
-
-    .moverse:
-        
-    .cavar:
-
-    .olfatear:
-
-    .ordenes:
-
-    .fin:
-        popad
-        iret
+    popad
+    iret
