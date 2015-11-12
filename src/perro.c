@@ -42,7 +42,7 @@ void game_perro_termino(perro_t *perro)
 //	~~~ completar ~~~
 }
 
-// transforma código de dirección en valores x e y 
+// transforma código de dirección en valores x e y
 uint game_dir2xy(/* in */ direccion dir, /* out */ int *x, /* out */ int *y)
 {
 	switch (dir)
@@ -61,8 +61,21 @@ uint game_dir2xy(/* in */ direccion dir, /* out */ int *x, /* out */ int *y)
 // *** viene del syscall mover ***
 uint game_perro_mover(perro_t *perro, direccion dir)
 {
+	// TODO
+	// 0x1 - Moverse. Recibe en ECX el código de dirección, que puede ser:
+	// 	 4, arriba
+	// 	 7, abajo
+	// 	10, derecha
+	// 	13, izquierda.
+	// Deberá copiar el código de la tarea a la nueva ubicación,
+	// siempre y cuando sea posible: debe chequearse que no se salga del mapa y que no haya
+	// una tarea del mismo jugador en el lugar destino. Deberá mapear la nueva posición del
+	// mapa a esa tarea.
+
 	int x, y;
 	uint res = game_dir2xy(dir, &x, &y);
+	if (res == -1) return 0;
+
 	int nuevo_x = perro->x + x;
 	int nuevo_y = perro->y + y;
     int viejo_x = perro->x;
@@ -81,6 +94,12 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 // *** viene del syscall cavar ***
 uint game_perro_cavar(perro_t *perro)
 {
+	// TODO
+	// 0x2 - Cavar. En caso de estar sobre un escondite aumenta en 1 la cantidad de huesos del
+	// perro y disminuye en 1 la cantidad de huesos del escondite. La cantidad de huesos en
+	// cada escondite están dados por una variable global llamada huesos en game.h. El perro
+	// puede llevar hasta 10 huesos, luego de eso el syscall debe ignorar el pedido.
+
 	// ~~~ completar ~~~
 	return 0;
 }
@@ -89,6 +108,10 @@ uint game_perro_cavar(perro_t *perro)
 // *** viene del syscall olfatear ***
 uint game_perro_olfatear(perro_t *perro)
 {
+	// TODO
+	// 0x3 - Olfatear. El tercer caso del syscall le permite a una tarea perro conocer la dirección
+	// del hueso más cercano (es decir, izquierda, derecha, arriba o abajo).
+
 	int x_actual_diff = 1000, y_actual_diff = 1000;
 
 
@@ -114,7 +137,7 @@ uint game_perro_olfatear(perro_t *perro)
 	{
 		return x_actual_diff > 0 ? DER : IZQ;
 	}
-	else 
+	else
 	{
 		return y_actual_diff > 0 ? ABA : ARR;
 	}
@@ -137,4 +160,3 @@ void game_perro_ver_si_en_cucha(perro_t *perro)
 	if (perro->huesos == 0)
 		game_perro_termino(perro);
 }
-

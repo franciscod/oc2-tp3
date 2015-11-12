@@ -17,40 +17,25 @@ void wait(int pseudosecs)
 	for (count = 0; count < pseudosecs * 1000000; count++) {}
 }
 
-
-uint game_syscall_manejar(uint syscall, uint param1)
+uint game_syscall_manejar(uint syscall, uint param1) // eax, ecx
 {
+	perro_t *perro = NULL; // FIXME
+	jugador_t *j = perro->jugador;
+
+	switch (syscall) {
+		case 0x1: return game_perro_mover(perro, param1); break;
+		case 0x2: return game_perro_cavar(perro); break;
+		case 0x3: return game_perro_olfatear(perro); break;
+		case 0x4: return (j->orden_id << 16) | (j->orden_y << 8) | j->orden_x; break;
+
+		default: break;
+	}
 	/* TODO que implemente los servicios según se indica en la sección 4.4.
-
-	0x1 - Moverse. Recibe en ECX el código de dirección, que puede ser:
-		 4, arriba
-		 7, abajo
-		10, derecha
-		13, izquierda.
-	Deberá copiar el código de la tarea a la nueva ubicación,
-	siempre y cuando sea posible: debe chequearse que no se salga del mapa y que no haya
-	una tarea del mismo jugador en el lugar destino. Deberá mapear la nueva posición del
-	mapa a esa tarea.
-
-	0x2 - Cavar. En caso de estar sobre un escondite aumenta en 1 la cantidad de huesos del
-	perro y disminuye en 1 la cantidad de huesos del escondite. La cantidad de huesos en
-	cada escondite están dados por una variable global llamada huesos en game.h. El perro
-	puede llevar hasta 10 huesos, luego de eso el syscall debe ignorar el pedido.
-
-	0x3 - Olfatear. El tercer caso del syscall le permite a una tarea perro conocer la dirección
-	del hueso más cercano (es decir, izquierda, derecha, arriba o abajo).
-
-	0x4 - Recibir orden. Esta función del syscall le permite a una tarea perro conocer la última
-	orden emitida por el jugador. Cada raza de perro interpretará libremente la orden. El
-	sistema debe devolver un par (x,y) y un numero indicando el numero de orden (1, 2 o
-	3). Para poder devolver 3 valores en uno, deberá codificarlos de la siguiente manera:
-	id\_orden << 16 | y << 8 | x.
 
 	Por último, es fundamental tener en cuenta que una vez llamado el servicio, el scheduler
 	se encargará de desalojar a la tarea que lo llamó para dar paso a la próxima tarea. Este
 	mecanismo será detallado mas adelante.
 */
-    // ~ completar llamando a las funciones que haga falta ~
     return 0;
 }
 
