@@ -203,38 +203,38 @@ altosalto:
     sti
 
     ; 5.6.h
-        push 0 ; id
-        push 0 ;index
-        push jugadorA
-        push perrolandia
-        call game_perro_inicializar
-        add esp, 16
+    ;    push 0 ; id
+    ;    push 0 ;index
+    ;    push jugadorA
+    ;    push perrolandia
+    ;    call game_perro_inicializar
+    ;    add esp, 16
 
-        push 0 ; tipo
-        push perrolandia
-        call game_perro_reciclar_y_lanzar
-        add esp, 8
+    ;    push 0 ; tipo
+    ;    push perrolandia
+    ;    call game_perro_reciclar_y_lanzar
+    ;    add esp, 8
 
-        push 0 ; index_tipo
-        push 0 ; index_jugador
-        push perrolandia ; perros
-        push tss_perrito ; tss
-        call completar_tss_tarea
-        add esp, 16
+    ;    push 0 ; index_tipo
+    ;    push 0 ; index_jugador
+    ;    push perrolandia ; perros
+    ;    push tss_perrito ; tss
+    ;    call completar_tss_tarea
+    ;    add esp, 16
 
-        mov eax, GDT_IDX_TSS_PERRO_START
-        imul eax, 8
-        add eax, [GDT_DESC+2]
-        push eax
-        push tss_perrito
-        call cargar_tss_en_gdt
-        add esp, 8
+    ;    mov eax, GDT_IDX_TSS_PERRO_START
+    ;    imul eax, 8
+    ;    add eax, [GDT_DESC+2]
+    ;    push eax
+    ;    push tss_perrito
+    ;    call cargar_tss_en_gdt
+    ;    add esp, 8
 
-        jmp GDT_SELECTOR_TSS_PERRO_START:0
+    ;    jmp GDT_SELECTOR_TSS_PERRO_START:0
     ; 5.6.h
 
     ; Saltar a la primera tarea: Idle
-    ;jmp GDT_SELECTOR_TSS_IDLE:0
+    jmp GDT_SELECTOR_TSS_IDLE:0
 
     ; Ciclar infinitamente (por si algo sale mal...)
     mov eax, 0xFFFF
