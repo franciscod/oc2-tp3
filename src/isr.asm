@@ -87,7 +87,7 @@ extern print_hex
 
 extern game_atender_tick, game_atender_teclado, game_syscall_manejar
 extern debugging_mode
-
+extern debugging_halted
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
 
@@ -129,13 +129,17 @@ _isr%1:
 
         call screen_pintar_info_debug
 
+        mov byte [debugging_halted], 1
+        sti
         .paused:
             cmp byte [debugging_mode], 0
             je .redibuja
             jmp .paused
 
         .redibuja:
+            cli
             call screen_redibujar_atras_debug
+            mov byte [debugging_halted], 0
 
     .desaloja:
 
@@ -183,6 +187,9 @@ global _isr32
 _isr32:
     pushad
 
+    cmp byte [debugging_halted], 1
+    je .fin
+
     call fin_intr_pic1
 
     call sched_atender_tick
@@ -212,7 +219,6 @@ _isr33:
         jnz .fin
 
         push eax
-        xchg bx, bx
         call game_atender_teclado
         add esp, 4
 

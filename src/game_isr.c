@@ -81,10 +81,18 @@ void game_atender_tick(perro_t *perro)
 #define KB_y        0x15 // TODO debugger
 
 unsigned char debugging_mode = 0;
+unsigned char debugging_halted = 0;
 
 // ~~~ debe atender la interrupción de teclado, se le pasa la tecla presionada
 void game_atender_teclado(unsigned char tecla)
 {
+	if (debugging_halted) {
+		breakpoint();
+		if (tecla == KB_y) {
+			debugging_mode = 0;
+		}
+		return;
+	}
 
 	if (tecla & 0x80) return;
 	print_hex(tecla, 2, 78, 0, 0x17);
