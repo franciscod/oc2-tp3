@@ -82,7 +82,7 @@ excepcion_cpu_19_msg db 'Excepcion 19 -- me cuelgo'
 excepcion_cpu_19_len equ $ - excepcion_cpu_19_msg
 
 
-extern screen_actualizar_reloj_global, screen_pintar_info_debug, screen_redibujar_atras_debug
+extern screen_actualizar_reloj_global, screen_pintar_info_debug, screen_cargar_atras_debug
 extern print_hex
 
 extern game_atender_tick, game_atender_teclado, game_syscall_manejar
@@ -137,8 +137,7 @@ _isr%1:
             jmp .paused
 
         .redibuja:
-            cli
-            call screen_redibujar_atras_debug
+            call screen_cargar_atras_debug
             mov byte [debugging_halted], 0
 
     .desaloja:
@@ -186,11 +185,10 @@ ISR 19
 global _isr32
 _isr32:
     pushad
+    call fin_intr_pic1
 
     cmp byte [debugging_halted], 1
     je .fin
-
-    call fin_intr_pic1
 
     call sched_atender_tick
 

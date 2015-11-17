@@ -25,6 +25,7 @@ extern jugador_t jugadorA, jugadorB;
 
 
 static ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
+static ca (*p2)[VIDEO_COLS];
 
 const char reloj[] = "|/-\\";
 #define reloj_size 4
@@ -289,6 +290,36 @@ void screen_stop_game_show_winner(jugador_t *j) {
     while(1){}
 }
 
+void screen_guardar_atras_debug() {
+    for (int i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
+        for (int j = POSICION_CUADRO_DEBUG_Y-1; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
+            p2[j+1][i] = p[j+1][i];
+        }
+    }
+}
+
+void screen_cargar_atras_debug() {
+    for (int i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
+        for (int j = POSICION_CUADRO_DEBUG_Y-1; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
+            p[j+1][i] = p2[j+1][i];
+        }
+    }
+
+    for (int i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
+        for (int j = POSICION_CUADRO_DEBUG_Y-1; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
+            screen_actualizar_posicion_mapa(i, j);
+        }
+    }
+    screen_pintar_jugador(&jugadorA);
+    screen_pintar_jugador(&jugadorB);
+
+    for (int i = 0; i < MAX_CANT_PERROS_VIVOS; i++) {
+        perro_t *dog = &(jugadorA.perros[i]);
+        if (dog->libre) continue;
+        screen_pintar_perro(dog);
+    }
+}
+
 void screen_pintar_info_debug(uint eax,
                               uint ebx,
                               uint ecx,
@@ -309,6 +340,7 @@ void screen_pintar_info_debug(uint eax,
                               uint stack2,
                               uint stack3,
                               uint stack4){
+    screen_guardar_atras_debug();
 
     screen_pintar_rect(' ', C_BG_BLACK, POSICION_CUADRO_DEBUG_Y, POSICION_CUADRO_DEBUG_X, ALTO_CUADRO_DEBUG, ANCHO_CUADRO_DEBUG);
     screen_pintar_rect(' ', C_BG_RED, POSICION_CUADRO_DEBUG_Y + 1, POSICION_CUADRO_DEBUG_X + 1, ALTO_BANDA_DEBUG, ANCHO_CUADRO_DEBUG - 2);
@@ -381,13 +413,4 @@ void screen_pintar_info_debug(uint eax,
     print_hex(stack2, 8, POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 25, C_BG_LIGHT_GREY | C_FG_WHITE);
     print_hex(stack3, 8, POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 26, C_BG_LIGHT_GREY | C_FG_WHITE);
     print_hex(stack4, 8, POSICION_CUADRO_DEBUG_X + 16, POSICION_CUADRO_DEBUG_Y + 27, C_BG_LIGHT_GREY | C_FG_WHITE);
-}
-
-void screen_redibujar_atras_debug() {
-    for (int i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
-        for (int j = POSICION_CUADRO_DEBUG_Y; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
-            screen_actualizar_posicion_mapa(i, j);
-        }
-    }
-
 }

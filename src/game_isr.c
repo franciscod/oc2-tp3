@@ -87,7 +87,6 @@ unsigned char debugging_halted = 0;
 void game_atender_teclado(unsigned char tecla)
 {
 	if (debugging_halted) {
-		breakpoint();
 		if (tecla == KB_y) {
 			debugging_mode = 0;
 		}
