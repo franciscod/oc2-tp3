@@ -139,6 +139,3 @@ clean:
 	rm -rf *~
 	rm -f entrega.tar.gz
 	@echo ''
-
-entrega: clean
-	git archive --format tar master | gzip > entrega.tar.gz
