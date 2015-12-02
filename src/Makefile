@@ -44,7 +44,6 @@ KERNELSIZE=89600  # = CODESIZE + TASKSSIZE
 TASKSTARTADDR=0x401000
 
 CC=gcc
-CC=clang
 NASM=nasm
 NASMFLAGS=-felf32
 OBJCOPY=objcopy
@@ -127,6 +126,7 @@ tasks: $(TASKSBINS)
 
 clean:
 	@echo 'Limpiando todo...'
+	rm -f *.gch
 	rm -f *.o
 	rm -f *.bin
 	rm -f *.tmp
