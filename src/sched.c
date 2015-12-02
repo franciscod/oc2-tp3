@@ -20,7 +20,8 @@ void sched_inicializar()
     scheduler.current = NO_CURRENT;
     ultima_tarea_jug[0] = 0;
     ultima_tarea_jug[1] = 0;
-    for (int i = 0; i<MAX_CANT_TAREAS_VIVAS; i++) {
+    int i;
+    for (i = 0; i<MAX_CANT_TAREAS_VIVAS; i++) {
         sched_task_t *t = &scheduler.tasks[i];
         t->gdt_index = NULL;
         t->perro = NULL;

@@ -35,7 +35,8 @@ uint mmu_proxima_pagina_fisica_libre() {
 }
 
 void mmu_inicializar_pagina(uint * pagina) {
-	for (uint i = 0 ; i < PAGE_SIZE / 4; i++) {
+	uint i;
+	for (i = 0 ; i < PAGE_SIZE / 4; i++) {
 		pagina[i] = 0x00000000; // uint, escribe 4 bytes
 	}
 }
@@ -107,7 +108,8 @@ uint mmu_inicializar_dir_kernel() {
 	mmu_inicializar_pagina((uint*) PAGE_DIRECTORY);
 
 	// identity mapping
-	for (uint i = 0; i < 1024; i++) {
+	uint i;
+	for (i = 0; i < 1024; i++) {
 		uint addr = i<<12;
 		mmu_mapear_pagina(addr, PAGE_DIRECTORY, addr, ATTRS_TABLA_RW_S);
 	}
@@ -142,7 +144,8 @@ uint mmu_inicializar_memoria_perro(perro_t *perro, int index_jugador, int index_
 	mmu_copiar_pagina(fisica_codigo_src, virtual_codigo_dst);
 
 	// identity mapping
-	for (uint i = 0; i < 1024; i++) {
+	uint i;
+	for (i = 0; i < 1024; i++) {
 		uint addr = i<<12;
 		mmu_mapear_pagina(addr, directorio_perro, addr, ATTRS_TABLA_RW_S);
 	}
@@ -166,7 +169,8 @@ void mmu_copiar_pagina (uint src, uint dst){
 	uint* psrc = (uint*) src;
 	uint* pdst = (uint*) dst;
 
-	for (uint i = 0 ; i < PAGE_SIZE / 4 ; i++) {
+	uint i;
+	for (i = 0 ; i < PAGE_SIZE / 4 ; i++) {
 		pdst[i] = psrc[i];
 	}
 }

@@ -89,6 +89,7 @@ perro_t* game_perro_en_posicion(uint x, uint y)
 void game_terminar_si_es_hora()
 {
 
+	int i;
 	int termina = 0;
 	int quedanhuesos = 0;
 
@@ -104,7 +105,7 @@ void game_terminar_si_es_hora()
 		termina |= 1;
 	}
 
-    for (int i = 0; i < ESCONDITES_CANTIDAD; i++)
+    for (i = 0; i < ESCONDITES_CANTIDAD; i++)
 	{
 		if (escondites[i][2] > 0) {
 			quedanhuesos = 1;

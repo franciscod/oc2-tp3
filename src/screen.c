@@ -291,29 +291,31 @@ void screen_stop_game_show_winner(jugador_t *j) {
 }
 
 void screen_guardar_atras_debug() {
-    for (int i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
-        for (int j = POSICION_CUADRO_DEBUG_Y-1; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
+    int i, j;
+    for (i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
+        for (j = POSICION_CUADRO_DEBUG_Y-1; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
             p2[j+1][i] = p[j+1][i];
         }
     }
 }
 
 void screen_cargar_atras_debug() {
-    for (int i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
-        for (int j = POSICION_CUADRO_DEBUG_Y-1; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
+    int i, j;
+    for (i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
+        for (j = POSICION_CUADRO_DEBUG_Y-1; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
             p[j+1][i] = p2[j+1][i];
         }
     }
 
-    for (int i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
-        for (int j = POSICION_CUADRO_DEBUG_Y-1; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
+    for (i = POSICION_CUADRO_DEBUG_X; i < POSICION_CUADRO_DEBUG_X + ANCHO_CUADRO_DEBUG; i++) {
+        for (j = POSICION_CUADRO_DEBUG_Y-1; j < POSICION_CUADRO_DEBUG_Y + ALTO_CUADRO_DEBUG; j++) {
             screen_actualizar_posicion_mapa(i, j);
         }
     }
     screen_pintar_jugador(&jugadorA);
     screen_pintar_jugador(&jugadorB);
 
-    for (int i = 0; i < MAX_CANT_PERROS_VIVOS; i++) {
+    for (i = 0; i < MAX_CANT_PERROS_VIVOS; i++) {
         perro_t *dog = &(jugadorA.perros[i]);
         if (dog->libre) continue;
         screen_pintar_perro(dog);

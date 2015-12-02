@@ -38,7 +38,8 @@ void tss_inicializar() {
   cargar_tss_en_gdt(&tss_inicial, &gdt[GDT_IDX_TSS_INICIAL]);
   cargar_tss_en_gdt(&tss_idle, &gdt[GDT_IDX_TSS_IDLE]);
 
-  for (int i=0; i<MAX_CANT_PERROS_VIVOS * 2; i++) {
+  int i;
+  for (i=0; i<MAX_CANT_PERROS_VIVOS * 2; i++) {
     cargar_tss_en_gdt(&tss_perro[i], &gdt[GDT_IDX_TSS_PERRO_START+i]);
   }
 }
