@@ -45,14 +45,15 @@ typedef unsigned int   uint;
 #define LIMIT_500M_15_00        (LIMIT_500M & 0x0FFFF)
 #define LIMIT_500M_19_16        ((LIMIT_500M & 0xF0000) >> 16)
 
-#define MAX_CANT_PERROS_VIVOS 8
-
 /* Indices en la gdt */
 /* -------------------------------------------------------------------------- */
+
 #define GDT_COUNT 32
 
+// son 8 entradas nulas, 1 de intel + 7 utilizadas segun el tp
 #define GDT_IDX_NULL_DESC           0
-#define GDT_IDX_NULL_DESC_LAST      7  // son 8 entradas nulas, 1 de intel + 7 utilizadas segun el tp
+#define GDT_IDX_NULL_DESC_LAST      7
+
 #define GDT_IDX_CODE_0              8
 #define GDT_IDX_CODE_3              9
 #define GDT_IDX_DATA_0              10
@@ -63,6 +64,7 @@ typedef unsigned int   uint;
 #define GDT_IDX_TSS_PERRO_START     15
 #define GDT_IDX_TSS_PERRO_END       (GDT_IDX_TSS_PERRO_START + MAX_CANT_PERROS_VIVOS * 2 - 1)
 
+#define MAX_CANT_PERROS_VIVOS 8
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */
 #define GDT_OFF_NULL_DESC           (GDT_IDX_NULL_DESC      << 3)
